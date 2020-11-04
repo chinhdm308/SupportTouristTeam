@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Support Tourist Team</string>
+    <string name="login_failed">Login failed</string>
+    <string name="register_failed">Register failed</string>
+    <string name="email_error">Email is empty</string>
+    <string name="password_error">Password is empty</string>
+    <string name="fields_empty">The fields are empty</string>
+    <string name="image_picked_empty">Please add image profile</string>
+    <string name="confirm_pass_incorrect">Please verify correct password</string>
+    <string name="required_permission">Please accept for required permission</string>
+</resources>
