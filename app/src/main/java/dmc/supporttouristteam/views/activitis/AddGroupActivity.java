@@ -31,11 +31,13 @@ import dmc.supporttouristteam.adapter.SelectedParticipantsAdapter;
 import dmc.supporttouristteam.callback.ParticipantsCallBack;
 import dmc.supporttouristteam.models.GroupInfo;
 import dmc.supporttouristteam.models.User;
+import dmc.supporttouristteam.presenters.add_group.AddGroupPresenter;
+import dmc.supporttouristteam.presenters.add_group.AddGroupView;
 import dmc.supporttouristteam.services.CommonService;
 import dmc.supporttouristteam.utils.Common;
 import dmc.supporttouristteam.views.fragment.CreateGroupBottomSheetFragment;
 
-public class AddGroupActivity extends AppCompatActivity implements ParticipantsCallBack {
+public class AddGroupActivity extends AppCompatActivity implements ParticipantsCallBack, AddGroupView {
     private EditText etSearch;
     private RecyclerView recyclerParticipants, recyclerSelectedParticipants;
     private ParticipantsAdapter participantsAdapter;
@@ -46,20 +48,20 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
 
     private FirebaseUser currentUser = Common.FB_AUTH.getCurrentUser();
 
+    private AddGroupPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
-
-        getSupportActionBar().setTitle("Add Participants");
+        getSupportActionBar().setTitle("Thêm thành viên");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mapping();
 
-        setRecyclerParticipants();
+        presenter = new AddGroupPresenter(this);
 
-        setRecyclerSelectedParticipants();
-
+        presenter.setRecyclerParticipants();
+        presenter.setRecyclerSelectedParticipants();
         search();
     }
 
@@ -72,12 +74,7 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<User> tmp = new ArrayList<>();
-                for (User user : participantsList) {
-                    if (user.getDisplayName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
-                        tmp.add(user);
-                    }
-                }
+                List<User> tmp = presenter.getParticipants(charSequence.toString(), participantsList);
                 participantsAdapter = new ParticipantsAdapter(tmp, AddGroupActivity.this);
                 recyclerParticipants.setAdapter(participantsAdapter);
             }
@@ -89,7 +86,8 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
         });
     }
 
-    private void setRecyclerParticipants() {
+    @Override
+    public void setRecyclerParticipants() {
         recyclerParticipants.setHasFixedSize(true);
         recyclerParticipants.setLayoutManager(new LinearLayoutManager(this));
         participantsList = new ArrayList<>();
@@ -114,7 +112,8 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
         });
     }
 
-    private void setRecyclerSelectedParticipants() {
+    @Override
+    public void setRecyclerSelectedParticipants() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         recyclerSelectedParticipants.setLayoutManager(linearLayoutManager);
@@ -131,6 +130,7 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
 
     @Override
     public void onParticipantItemClick(int pos, boolean isAdd) {
+        presenter.updatesSelectedParticipants();
         if (isAdd) {
             selectedParticipantsList.add(participantsList.get(pos));
         } else {
@@ -183,10 +183,6 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
                 finish();
             }
         });
-    }
-
-    private void initialize() {
-
     }
 
     private void mapping() {

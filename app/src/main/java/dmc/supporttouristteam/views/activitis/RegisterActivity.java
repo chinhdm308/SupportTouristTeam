@@ -1,6 +1,8 @@
 package dmc.supporttouristteam.views.activitis;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -11,9 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.R;
@@ -35,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        getSupportActionBar().setTitle("Đăng ký");
+        getSupportActionBar().setTitle(getString(R.string.register));
         mapping();
         registerPresenter = new RegisterPresenter(this);
         imageUser.setOnClickListener(this);
@@ -83,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 registerPresenter.navigateToRegister();
                 break;
             case R.id.image_user:
-                registerPresenter.checkAndRequestForPermission(this, this);
+                registerPresenter.checkAndRequestForPermission();
                 break;
         }
     }
@@ -117,5 +122,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void showMessage(int message) {
         Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void checkAndRequestForPermission() {
+        if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(RegisterActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                showMessage(R.string.required_permission);
+            } else {
+                ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                }, 1);
+            }
+        } else {
+            openGallery();
+        }
+    }
+
+    @Override
+    public void openGallery() {
+        // start picker to get image for cropping and then use the image in cropping activity
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(RegisterActivity.this);
     }
 }

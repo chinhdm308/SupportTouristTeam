@@ -7,4 +7,6 @@ public interface RegisterView {
     void hideRegisterButton();
     void navigateToLogin();
     void showMessage(int message);
+    void checkAndRequestForPermission();
+    void openGallery();
 }

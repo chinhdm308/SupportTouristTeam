@@ -23,6 +23,7 @@ public class ChatsPresenter {
     public void navigateToAddGroupActivity() {
         callback.navigateToAddGroupActivity();
     }
+
     public void navigateToSearchActivity() {
         callback.navigateToSearchActivity();
     }

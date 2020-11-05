@@ -44,27 +44,19 @@ public class ChatsFragment extends Fragment implements ChatsCallBack, View.OnCli
     private Button buttonAddGroup, buttonSearch;
     private RecyclerView recyclerChats;
     private ItemChatsAdapter itemChatsAdapter;
-
     private List<GroupInfo> groupInfoList;
-
     private FirebaseUser currentUser = Common.FB_AUTH.getCurrentUser();
-
     private ChatsPresenter chatsPresenter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mapping(view);
-
         loadUserInfo(view);
-
         photo.setOnClickListener(this);
         buttonAddGroup.setOnClickListener(this);
         buttonSearch.setOnClickListener(this);
-
         chatsPresenter = new ChatsPresenter(this);
-
         chatsPresenter.setRecyclerChats();
     }
 

@@ -29,32 +29,34 @@
 
     <Button
         android:id="@+id/button_add_group"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/bg_add_group"
+        app:icon="@drawable/ic_baseline_group_add_24"
         app:layout_constraintBottom_toBottomOf="@+id/image_user_photo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image_user_photo" />
+        app:layout_constraintTop_toTopOf="@+id/image_user_photo"
+        app:shapeAppearance="@style/CustomShapeAddGroup" />
 
     <Button
         android:id="@+id/button_search"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/bg_search"
-        android:drawableStart="@drawable/ic_baseline_search_24"
-        android:drawablePadding="8dp"
-        android:gravity="left|center_vertical"
-        android:hint="Search"
-        android:padding="5dp"
+        android:padding="8dp"
+        android:text="Tìm kiếm"
         android:textAllCaps="false"
-        android:textSize="20sp"
+        app:icon="@drawable/ic_baseline_search_24"
+        app:iconGravity="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_user_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/image_user_photo"
+        app:rippleColor="#DDDCDC"
+        app:shapeAppearance="@style/CustomShapeSearch" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_chats"
@@ -63,7 +65,9 @@
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_search" />
+        app:layout_constraintTop_toBottomOf="@+id/button_search"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

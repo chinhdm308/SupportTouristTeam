@@ -18,7 +18,7 @@
         android:drawablePadding="5dp"
         android:ems="10"
         android:gravity="center|left"
-        android:hint="Search..."
+        android:hint="Tìm kiếm..."
         android:inputType="textPersonName"
         android:maxLines="1"
         android:padding="10dp"

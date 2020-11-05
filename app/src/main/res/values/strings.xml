@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Support Tourist Team</string>
-    <string name="login_failed">Login failed</string>
-    <string name="register_failed">Register failed</string>
-    <string name="email_error">Email is empty</string>
-    <string name="password_error">Password is empty</string>
-    <string name="fields_empty">The fields are empty</string>
-    <string name="image_picked_empty">Please add image profile</string>
-    <string name="confirm_pass_incorrect">Please verify correct password</string>
-    <string name="required_permission">Please accept for required permission</string>
+    <string name="login">Đăng nhập</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="register">Đăng ký</string>
+    <string name="register_failed">Đăng ký thất bại</string>
+    <string name="register_successful">Đăng ký thành công</string>
+    <string name="email_error">Email trống</string>
+    <string name="password_error">Mật khẩu trống</string>
+    <string name="fields_empty">Thông tin còn thiếu</string>
+    <string name="image_picked_empty">Vui lòng chọn ảnh đại diện</string>
+    <string name="confirm_pass_incorrect">Xác nhận lại mật khẩu</string>
+    <string name="required_permission">Vui lòng xác nhận các quyền</string>
 </resources>

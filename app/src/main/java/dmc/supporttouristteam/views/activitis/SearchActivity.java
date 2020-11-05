@@ -39,15 +39,10 @@ public class SearchActivity extends AppCompatActivity implements ChatsCallBack {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         getSupportActionBar().hide();
-
         mapping();
-
         initialize();
-
         setRecyclerSearch();
-
         search();
     }
 

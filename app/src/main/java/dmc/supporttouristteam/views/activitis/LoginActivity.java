@@ -1,7 +1,6 @@
 package dmc.supporttouristteam.views.activitis;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -36,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getSupportActionBar().setTitle("Đăng nhập");
+        getSupportActionBar().setTitle(getString(R.string.login));
         mapping();
         buttonLogin.setOnClickListener(this);
         textCreateAccount.setOnClickListener(this);
@@ -47,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                CommonService.showMessage(LoginActivity.this, "Please accept for required permission");
+                CommonService.showMessage(LoginActivity.this, getString(R.string.required_permission));
                 finish();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{
@@ -69,7 +68,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBarLoadingLogin = findViewById(R.id.progressBar_loading_login);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
