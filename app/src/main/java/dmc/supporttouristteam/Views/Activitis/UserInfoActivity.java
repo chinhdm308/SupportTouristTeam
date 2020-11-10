@@ -27,10 +27,10 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        getSupportActionBar().setTitle("User Information");
+        getSupportActionBar().setTitle("Thông tin người dùng");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mapping();
+        init();
 
         User user = getDataToIntent();
 
@@ -65,7 +65,7 @@ public class UserInfoActivity extends AppCompatActivity {
         return (user != null) ? user : null;
     }
 
-    private void mapping() {
+    private void init() {
         userPhoto = findViewById(R.id.image_user);
         textUsername = findViewById(R.id.text_user_name);
         textEmail = findViewById(R.id.text_user_email);

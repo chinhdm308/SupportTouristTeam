@@ -26,7 +26,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.Adapter.MessageAdapter;
+import dmc.supporttouristteam.Presenters.Message.MessageAdapter;
 import dmc.supporttouristteam.Models.Chat;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
@@ -51,7 +51,7 @@ public class MessageActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        mapping();
+        init();
 
         initialize();
 
@@ -170,7 +170,7 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private void mapping() {
+    private void init() {
         textGroupName = findViewById(R.id.text_group_name);
         buttonBack = findViewById(R.id.button_back);
         buttonSend = findViewById(R.id.button_send);

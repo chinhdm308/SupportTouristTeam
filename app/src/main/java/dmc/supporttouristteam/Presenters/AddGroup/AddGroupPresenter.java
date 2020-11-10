@@ -3,7 +3,6 @@ package dmc.supporttouristteam.Presenters.AddGroup;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dmc.supporttouristteam.Models.User;
@@ -15,16 +14,6 @@ public class AddGroupPresenter implements CommonAddGroup.Presenter, CommonAddGro
     public AddGroupPresenter(CommonAddGroup.View view) {
         this.view = view;
         this.interactor = new AddGroupInteractor(this);
-    }
-
-    public List<User> getParticipants(String s, List<User> participantsList) {
-        List<User> tmp = new ArrayList<>();
-        for (User user : participantsList) {
-            if (user.getDisplayName().toLowerCase().contains(s.toLowerCase())) {
-                tmp.add(user);
-            }
-        }
-        return tmp;
     }
 
     public void updatesSelectedParticipants(int pos, boolean isAdd) {
@@ -53,7 +42,17 @@ public class AddGroupPresenter implements CommonAddGroup.Presenter, CommonAddGro
     }
 
     @Override
+    public void search(String s, List<User> participantsList) {
+        interactor.search(s, participantsList);
+    }
+
+    @Override
     public void onReadParticipants(List<User> userList) {
         view.setRecyclerParticipants(userList);
+    }
+
+    @Override
+    public void onSearch(List<User> participantsList) {
+        view.setRecyclerParticipantsAfterSearch(participantsList);
     }
 }

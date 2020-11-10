@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.Adapter;
+package dmc.supporttouristteam.Presenters.Message;
 
 import android.content.Context;
 import android.view.LayoutInflater;

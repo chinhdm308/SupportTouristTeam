@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.Adapter.ItemChatsAdapter;
+import dmc.supporttouristteam.Presenters.Chats.ItemChatsAdapter;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Presenters.Chats.ChatsPresenter;
 import dmc.supporttouristteam.Presenters.Chats.CommonChats;
@@ -43,7 +43,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Com
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mapping(view);
+        init(view);
         currentUser = Config.FB_AUTH.getCurrentUser();
         // load uer info
         Glide.with(view.getContext()).load(currentUser.getPhotoUrl())
@@ -58,7 +58,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Com
         presenter.readChatList(currentUser);
     }
 
-    private void mapping(View view) {
+    private void init(View view) {
         photo = view.findViewById(R.id.image_user_photo);
         textName = view.findViewById(R.id.text_user_name);
         buttonAddGroup = view.findViewById(R.id.button_add_group);
@@ -100,6 +100,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Com
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_user_photo:
+                presenter.navigateToUserInfoActivity();
                 break;
             case R.id.button_add_group:
                 presenter.navigateToAddGroupActivity();

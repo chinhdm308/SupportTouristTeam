@@ -10,7 +10,8 @@ import dmc.supporttouristteam.Models.User;
 public interface CommonAddGroup {
     interface View {
         void setRecyclerParticipants(List<User> participantList);
-        void setRecyclerSelectedParticipants();
+        void setRecyclerParticipantsAfterSearch(List<User> participantList);
+        void setRecyclerSelectedParticipants(List<User> selectedParticipantsList);
         void addParticipant(int pos);
         void removeParticipant(int pos);
         void showCreateGroupBottomSheet();
@@ -19,13 +20,16 @@ public interface CommonAddGroup {
 
     interface Presenter {
         void readParticipants(DatabaseReference reference, FirebaseUser currentUser);
+        void search(String s, List<User> participantsList);
     }
 
     interface Interactor {
         void readParticipants(DatabaseReference reference, FirebaseUser currentUser);
+        void search(String s, List<User> participantsList);
     }
 
     interface OnOperationListener {
         void onReadParticipants(List<User> userList);
+        void onSearch(List<User> participantsList);
     }
 }

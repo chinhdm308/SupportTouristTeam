@@ -19,14 +19,14 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-        mapping();
+        init();
         navigationBar.setOnItemSelectedListener(this);
         if (savedInstanceState == null) {
             navigationBar.setItemSelected(R.id.menu_chats, true);
         }
     }
 
-    private void mapping() {
+    private void init() {
         navigationBar = findViewById(R.id.navigation_bar);
     }
 

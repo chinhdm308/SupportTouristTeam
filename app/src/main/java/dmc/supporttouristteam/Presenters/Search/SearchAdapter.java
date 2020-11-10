@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.Adapter;
+package dmc.supporttouristteam.Presenters.Search;
 
 import android.view.LayoutInflater;
 import android.view.View;

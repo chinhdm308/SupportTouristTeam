@@ -24,13 +24,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.Adapter.ParticipantsAdapter;
-import dmc.supporttouristteam.Adapter.SelectedParticipantsAdapter;
+import dmc.supporttouristteam.Presenters.AddGroup.ParticipantsAdapter;
+import dmc.supporttouristteam.Presenters.AddGroup.SelectedParticipantsAdapter;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Presenters.AddGroup.AddGroupPresenter;
 import dmc.supporttouristteam.Presenters.AddGroup.CommonAddGroup;
-import dmc.supporttouristteam.Presenters.ParticipantsCallBack;
+import dmc.supporttouristteam.Presenters.AddGroup.ParticipantsCallBack;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Fragments.CreateGroupBottomSheetFragment;
@@ -57,11 +57,12 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
 
         currentUser = Config.FB_AUTH.getCurrentUser();
 
-        mapping();
+        init();
 
         presenter = new AddGroupPresenter(this);
+        presenter.readParticipants(FirebaseDatabase.getInstance().getReference(Config.RF_USERS), currentUser);
 
-        search();
+//        search();
     }
 
     private void search() {
@@ -73,9 +74,7 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<User> tmp = presenter.getParticipants(charSequence.toString(), participantsList);
-                participantsAdapter = new ParticipantsAdapter(tmp, AddGroupActivity.this);
-                recyclerParticipants.setAdapter(participantsAdapter);
+                presenter.search(charSequence.toString(), participantsList);
             }
 
             @Override
@@ -87,18 +86,19 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
 
     @Override
     public void setRecyclerParticipants(List<User> participantList) {
-        recyclerParticipants.setHasFixedSize(true);
-        recyclerParticipants.setLayoutManager(new LinearLayoutManager(this));
+        this.participantsList = participantList;
         participantsAdapter = new ParticipantsAdapter(participantList, AddGroupActivity.this);
         recyclerParticipants.setAdapter(participantsAdapter);
     }
 
     @Override
-    public void setRecyclerSelectedParticipants() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        recyclerSelectedParticipants.setLayoutManager(linearLayoutManager);
-        selectedParticipantsList = new ArrayList<>();
+    public void setRecyclerParticipantsAfterSearch(List<User> participantList) {
+        participantsAdapter = new ParticipantsAdapter(participantList, AddGroupActivity.this);
+        recyclerParticipants.setAdapter(participantsAdapter);
+    }
+
+    @Override
+    public void setRecyclerSelectedParticipants(List<User> selectedParticipantsList) {
         selectedParticipantsAdapter = new SelectedParticipantsAdapter(selectedParticipantsList);
         recyclerSelectedParticipants.setAdapter(selectedParticipantsAdapter);
     }
@@ -173,9 +173,19 @@ public class AddGroupActivity extends AppCompatActivity implements ParticipantsC
         });
     }
 
-    private void mapping() {
+    private void init() {
         recyclerParticipants = findViewById(R.id.recycler_participants);
+        recyclerParticipants.setHasFixedSize(true);
+        recyclerParticipants.setLayoutManager(new LinearLayoutManager(this));
+
         recyclerSelectedParticipants = findViewById(R.id.recycler_selected_participants);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        recyclerSelectedParticipants.setLayoutManager(linearLayoutManager);
+
+        selectedParticipantsList = new ArrayList<>();
+        participantsList = new ArrayList<>();
+
         etSearch = findViewById(R.id.et_search);
     }
 }

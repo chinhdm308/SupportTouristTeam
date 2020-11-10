@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.Adapter.SearchAdapter;
+import dmc.supporttouristteam.Presenters.Search.SearchAdapter;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
@@ -38,7 +38,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getSupportActionBar().hide();
-        mapping();
+        init();
         initialize();
         setRecyclerSearch();
         search();
@@ -95,7 +95,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void mapping() {
+    private void init() {
         editTextSearch = findViewById(R.id.et_search);
         recyclerSearch = findViewById(R.id.recycler_search);
     }

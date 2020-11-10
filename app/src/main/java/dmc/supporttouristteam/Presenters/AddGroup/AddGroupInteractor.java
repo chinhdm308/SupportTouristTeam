@@ -23,7 +23,6 @@ public class AddGroupInteractor implements CommonAddGroup.Interactor {
 
     @Override
     public void readParticipants(DatabaseReference reference, FirebaseUser currentUser) {
-//                DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
         participantsList = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -42,5 +41,16 @@ public class AddGroupInteractor implements CommonAddGroup.Interactor {
 
             }
         });
+    }
+
+    @Override
+    public void search(String s, List<User> participantsList) {
+        List<User> temp = new ArrayList<>();
+        for (User user : participantsList) {
+            if (user.getDisplayName().toLowerCase().contains(s.toLowerCase())) {
+                temp.add(user);
+            }
+        }
+        listener.onSearch(temp);
     }
 }

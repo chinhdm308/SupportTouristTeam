@@ -36,14 +36,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         getSupportActionBar().setTitle(getString(R.string.register));
-        mapping();
+        init();
         presenter = new RegisterPresenter(this);
         imageUser.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
         textReadyToLogin.setOnClickListener(this);
     }
 
-    private void mapping() {
+    private void init() {
         imageUser = findViewById(R.id.image_user);
         etDisplayName = findViewById(R.id.et_display_name);
         etEmail = findViewById(R.id.et_email);

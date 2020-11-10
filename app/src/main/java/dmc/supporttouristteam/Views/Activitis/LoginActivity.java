@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().setTitle(getString(R.string.login));
-        mapping();
+        init();
         buttonLogin.setOnClickListener(this);
         textCreateAccount.setOnClickListener(this);
         presenter = new LoginPresenter(this);
@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void mapping() {
+    private void init() {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         textCreateAccount = findViewById(R.id.text_create_new_account);

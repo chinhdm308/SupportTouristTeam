@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.Adapter;
+package dmc.supporttouristteam.Presenters.Chats;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.Presenters.Chats.ChatsPresenter;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
