@@ -17,10 +17,10 @@ import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.User;
 
 public class SelectedParticipantsAdapter extends RecyclerView.Adapter<SelectedParticipantsAdapter.SelectedParticipantsViewHolder> {
-    List<User> selectedParticipantsList;
+    List<User> selectedParticipantList;
 
-    public SelectedParticipantsAdapter(List<User> selectedParticipantsList) {
-        this.selectedParticipantsList = selectedParticipantsList;
+    public SelectedParticipantsAdapter(List<User> selectedParticipantList) {
+        this.selectedParticipantList = selectedParticipantList;
     }
 
     @NonNull
@@ -33,14 +33,14 @@ public class SelectedParticipantsAdapter extends RecyclerView.Adapter<SelectedPa
 
     @Override
     public void onBindViewHolder(@NonNull SelectedParticipantsViewHolder holder, int position) {
-        User user = selectedParticipantsList.get(position);
+        User user = selectedParticipantList.get(position);
         Glide.with(holder.itemView.getContext()).load(user.getProfileImg()).into(holder.photo);
         holder.name.setText(user.getDisplayName());
     }
 
     @Override
     public int getItemCount() {
-        return selectedParticipantsList.size();
+        return selectedParticipantList.size();
     }
 
     public class SelectedParticipantsViewHolder extends RecyclerView.ViewHolder {

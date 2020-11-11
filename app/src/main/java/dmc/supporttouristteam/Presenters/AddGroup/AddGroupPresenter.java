@@ -1,5 +1,7 @@
 package dmc.supporttouristteam.Presenters.AddGroup;
 
+import android.content.Context;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
@@ -7,33 +9,13 @@ import java.util.List;
 
 import dmc.supporttouristteam.Models.User;
 
-public class AddGroupPresenter implements CommonAddGroup.Presenter, CommonAddGroup.OnOperationListener {
-    private CommonAddGroup.View view;
+public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupContract.OnOperationListener {
+    private AddGroupContract.View view;
     private AddGroupInteractor interactor;
 
-    public AddGroupPresenter(CommonAddGroup.View view) {
+    public AddGroupPresenter(AddGroupContract.View view) {
         this.view = view;
         this.interactor = new AddGroupInteractor(this);
-    }
-
-    public void updatesSelectedParticipants(int pos, boolean isAdd) {
-        if (isAdd) {
-            view.addParticipant(pos);
-        } else {
-            view.removeParticipant(pos);
-        }
-    }
-
-    public void confirmNewGroup(int size) {
-        if (size == 0) {
-            view.showMessage("Chưa có thành viên nào");
-        }
-        if (size == 1) {
-//            createNewGroup(selectedParticipantsList.get(0));
-        }
-        if (size > 1) {
-            view.showCreateGroupBottomSheet();
-        }
     }
 
     @Override
@@ -42,8 +24,21 @@ public class AddGroupPresenter implements CommonAddGroup.Presenter, CommonAddGro
     }
 
     @Override
-    public void search(String s, List<User> participantsList) {
-        interactor.search(s, participantsList);
+    public void search(String s, List<User> participantList) {
+        interactor.search(s, participantList);
+    }
+
+    @Override
+    public void createGroup(Context context, List<User> selectedParticipantList) {
+        if (selectedParticipantList.size() == 0) {
+             view.showMessage("Chưa có thành viên nào");
+        }
+        if (selectedParticipantList.size() == 1) {
+            interactor.createGroup(context, selectedParticipantList.get(0));
+        }
+        if (selectedParticipantList.size() > 1) {
+            view.showCreateGroupBottomSheet();
+        }
     }
 
     @Override
@@ -52,7 +47,16 @@ public class AddGroupPresenter implements CommonAddGroup.Presenter, CommonAddGro
     }
 
     @Override
-    public void onSearch(List<User> participantsList) {
-        view.setRecyclerParticipantsAfterSearch(participantsList);
+    public void onSearch(List<User> participantList) {
+        view.setRecyclerParticipantsAfterSearch(participantList);
+    }
+
+    @Override
+    public void onParticipantItemClick(int pos, boolean isAdd) {
+        if (isAdd) {
+            view.addParticipant(pos);
+        } else {
+            view.removeParticipant(pos);
+        }
     }
 }

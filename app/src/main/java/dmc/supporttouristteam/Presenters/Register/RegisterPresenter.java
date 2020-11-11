@@ -13,11 +13,11 @@ import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
-public class RegisterPresenter implements CommonRegister.Presenter, CommonRegister.OnOperationListener {
-    private CommonRegister.View view;
+public class RegisterPresenter implements RegisterContract.Presenter, RegisterContract.OnOperationListener {
+    private RegisterContract.View view;
     private RegisterInteractor interactor;
 
-    public RegisterPresenter(CommonRegister.View view) {
+    public RegisterPresenter(RegisterContract.View view) {
         this.view = view;
         this.interactor = new RegisterInteractor(this);
     }

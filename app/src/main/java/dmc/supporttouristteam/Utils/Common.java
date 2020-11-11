@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import androidx.core.app.ActivityCompat;
 
 public class Common {
+
     public static void requestPermission(Activity activity, String permissionName, int permissionRequestCode) {
         ActivityCompat.requestPermissions(activity,
                 new String[]{permissionName}, permissionRequestCode);

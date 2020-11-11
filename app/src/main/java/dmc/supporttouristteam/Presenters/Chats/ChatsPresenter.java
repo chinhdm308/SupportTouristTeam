@@ -6,11 +6,11 @@ import java.util.List;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 
-public class ChatsPresenter implements CommonChats.Presenter, CommonChats.OnOperationListener {
-    private CommonChats.View view;
+public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.OnOperationListener {
+    private ChatsContract.View view;
     private ChatsInteractor interactor;
 
-    public ChatsPresenter(CommonChats.View view) {
+    public ChatsPresenter(ChatsContract.View view) {
         this.view = view;
         this.interactor = new ChatsInteractor(this);
     }

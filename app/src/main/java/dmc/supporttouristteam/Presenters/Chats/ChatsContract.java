@@ -6,7 +6,7 @@ import java.util.List;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 
-public interface CommonChats {
+public interface ChatsContract {
     interface View {
         void setRecyclerChats(List<GroupInfo> groupInfoList);
         void navigateToUserInfoActivity();

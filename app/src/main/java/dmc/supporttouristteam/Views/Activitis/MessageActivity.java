@@ -20,16 +20,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.Presenters.Message.MessageAdapter;
 import dmc.supporttouristteam.Models.Chat;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.Presenters.Message.MessageAdapter;
+import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 
 public class MessageActivity extends AppCompatActivity {
@@ -52,8 +50,6 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         init();
-
-        initialize();
 
         loadData();
 
@@ -81,7 +77,7 @@ public class MessageActivity extends AppCompatActivity {
                 if (!msg.isEmpty()) {
                     sendMessage(currentUser.getUid(), "", msg);
                 } else {
-//                    CommonService.showMessage(MessageActivity.this, "You can't send empty message");
+
                 }
                 etMessage.setText("");
             }
@@ -118,28 +114,6 @@ public class MessageActivity extends AppCompatActivity {
                 textGroupName.setText(groupInfo.getName());
             }
         }
-    }
-
-    private void seenMessage(final String userId) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Config.RF_CHATS);
-        seenListener = databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getSender().equals(userId) && chat.getReceiver().equals(currentUser.getUid())) {
-                        Map<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("isseen", true);
-                        snapshot.getRef().updateChildren(hashMap);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void sendMessage(String sender, String receiver, String message) {
@@ -183,9 +157,7 @@ public class MessageActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         recyclerViewMessage.setLayoutManager(linearLayoutManager);
-    }
 
-    private void initialize() {
         chatList = new ArrayList<>();
     }
 

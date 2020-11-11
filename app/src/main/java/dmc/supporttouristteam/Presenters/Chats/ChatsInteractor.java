@@ -15,11 +15,11 @@ import java.util.List;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Utils.Config;
 
-public class ChatsInteractor implements CommonChats.Interactor {
-    private CommonChats.OnOperationListener listener;
+public class ChatsInteractor implements ChatsContract.Interactor {
+    private ChatsContract.OnOperationListener listener;
     private List<GroupInfo> groupInfoList;
 
-    public ChatsInteractor(CommonChats.OnOperationListener listener) {
+    public ChatsInteractor(ChatsContract.OnOperationListener listener) {
         this.listener = listener;
     }
 

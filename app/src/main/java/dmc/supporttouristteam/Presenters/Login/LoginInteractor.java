@@ -10,11 +10,11 @@ import com.google.firebase.auth.AuthResult;
 
 import dmc.supporttouristteam.Utils.Config;
 
-public class LoginInteractor implements CommonLogin.Interactor {
+public class LoginInteractor implements LoginContract.Interactor {
 
-    private CommonLogin.OnOperationListener listener;
+    private LoginContract.OnOperationListener listener;
 
-    public LoginInteractor(CommonLogin.OnOperationListener listener) {
+    public LoginInteractor(LoginContract.OnOperationListener listener) {
         this.listener = listener;
     }
 

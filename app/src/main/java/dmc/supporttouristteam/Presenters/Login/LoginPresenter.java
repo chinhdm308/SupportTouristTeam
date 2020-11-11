@@ -2,11 +2,11 @@ package dmc.supporttouristteam.Presenters.Login;
 
 import dmc.supporttouristteam.R;
 
-public class LoginPresenter implements CommonLogin.Presenter, CommonLogin.OnOperationListener{
-    private CommonLogin.View view;
+public class LoginPresenter implements LoginContract.Presenter, LoginContract.OnOperationListener{
+    private LoginContract.View view;
     private LoginInteractor interactor;
 
-    public LoginPresenter(CommonLogin.View view) {
+    public LoginPresenter(LoginContract.View view) {
         this.view = view;
         this.interactor = new LoginInteractor(this);
     }

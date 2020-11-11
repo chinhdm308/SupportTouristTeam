@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 
-public interface CommonRegister {
+public interface RegisterContract {
     interface View {
         void showProgress();
         void hideProgress();

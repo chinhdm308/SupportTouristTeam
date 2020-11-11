@@ -16,11 +16,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.Presenters.Register.CommonRegister;
+import dmc.supporttouristteam.Presenters.Register.RegisterContract;
 import dmc.supporttouristteam.Presenters.Register.RegisterPresenter;
 import dmc.supporttouristteam.R;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, CommonRegister.View {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, RegisterContract.View {
     private CircleImageView imageUser;
     private TextInputEditText etDisplayName, etEmail, etPassword, etConfirmPassword;
     private ProgressBar loadingRegisterProgress;

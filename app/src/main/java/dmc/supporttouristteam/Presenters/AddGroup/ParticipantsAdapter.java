@@ -19,13 +19,12 @@ import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.User;
 
 public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapter.ParticipantViewHolder> {
+    private List<User> userList;
+    private AddGroupContract.Presenter presenter;
 
-    List<User> userList;
-    ParticipantsCallBack listener;
-
-    public ParticipantsAdapter(List<User> userList, ParticipantsCallBack listener) {
+    public ParticipantsAdapter(List<User> userList, AddGroupContract.Presenter presenter) {
         this.userList = userList;
-        this.listener = listener;
+        this.presenter = presenter;
     }
 
     @NonNull
@@ -61,7 +60,7 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    listener.onParticipantItemClick(getAdapterPosition(), b);
+                    presenter.onParticipantItemClick(getAdapterPosition(), b);
                 }
             });
         }

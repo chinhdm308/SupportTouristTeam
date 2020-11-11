@@ -23,14 +23,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.Presenters.Chats.ItemChatsAdapter;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Presenters.Chats.ChatsPresenter;
-import dmc.supporttouristteam.Presenters.Chats.CommonChats;
+import dmc.supporttouristteam.Presenters.Chats.ChatsContract;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Activitis.AddGroupActivity;
 import dmc.supporttouristteam.Views.Activitis.SearchActivity;
 import dmc.supporttouristteam.Views.Activitis.UserInfoActivity;
 
-public class ChatsFragment extends Fragment implements View.OnClickListener, CommonChats.View {
+public class ChatsFragment extends Fragment implements View.OnClickListener, ChatsContract.View {
     private CircleImageView photo;
     private TextView textName;
     private Button buttonAddGroup, buttonSearch;

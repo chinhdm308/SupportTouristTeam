@@ -24,10 +24,10 @@ import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 
-public class RegisterInteractor implements CommonRegister.Interactor {
-    private CommonRegister.OnOperationListener listener;
+public class RegisterInteractor implements RegisterContract.Interactor {
+    private RegisterContract.OnOperationListener listener;
 
-    public RegisterInteractor(CommonRegister.OnOperationListener listener) {
+    public RegisterInteractor(RegisterContract.OnOperationListener listener) {
         this.listener = listener;
     }
 

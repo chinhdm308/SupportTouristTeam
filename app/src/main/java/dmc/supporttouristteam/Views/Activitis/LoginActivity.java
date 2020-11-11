@@ -13,12 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseUser;
 
-import dmc.supporttouristteam.Presenters.Login.CommonLogin;
+import dmc.supporttouristteam.Presenters.Login.LoginContract;
 import dmc.supporttouristteam.Presenters.Login.LoginPresenter;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CommonLogin.View {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginContract.View {
     private TextInputEditText etEmail, etPassword;
     private Button buttonLogin;
     private TextView textCreateAccount;

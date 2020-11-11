@@ -1,6 +1,6 @@
 package dmc.supporttouristteam.Presenters.Login;
 
-public interface CommonLogin {
+public interface LoginContract {
     interface View {
         void showProgress();
         void hideProgress();
