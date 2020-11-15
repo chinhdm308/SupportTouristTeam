@@ -39,15 +39,18 @@
         app:layout_constraintStart_toEndOf="@+id/image_group"
         app:layout_constraintTop_toTopOf="@+id/image_group" />
 
-    <ImageView
+    <Button
         android:id="@+id/button_show_location"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="8dp"
+        app:icon="@drawable/ic_baseline_my_location_24"
+        app:iconGravity="textEnd"
         app:layout_constraintBottom_toBottomOf="@+id/text_group_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_group_name"
-        app:srcCompat="@drawable/ic_baseline_my_location_24" />
+        app:shapeAppearance="@style/CustomShapeAddGroup" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_message"
@@ -72,7 +75,7 @@
         android:background="@drawable/bg_search"
         android:ems="10"
         android:gravity="top|left"
-        android:hint="Message"
+        android:hint="Nhập tin nhắn..."
         android:inputType="textMultiLine"
         android:maxLines="4"
         android:minLines="1"

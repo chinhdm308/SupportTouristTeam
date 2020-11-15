@@ -1,6 +1,5 @@
 package dmc.supporttouristteam.Views.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,27 +12,25 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.Presenters.AddGroup.AddGroupContract;
+import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
-import dmc.supporttouristteam.Views.Activitis.MessageActivity;
 
 public class CreateGroupBottomSheetFragment extends BottomSheetDialogFragment {
     private EditText etGroupName;
     private Button buttonCancel, buttonCreate;
-    private List<User> selectedParticipantsList;
+    private List<User> selectedParticipantList;
     private FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
 
-    public CreateGroupBottomSheetFragment(List<User> selectedParticipantsList) {
-        this.selectedParticipantsList = selectedParticipantsList;
+    private AddGroupContract.Presenter presenter;
+
+    public CreateGroupBottomSheetFragment(List<User> selectedParticipantList, AddGroupContract.Presenter presenter) {
+        this.selectedParticipantList = selectedParticipantList;
+        this.presenter = presenter;
     }
 
     @Nullable
@@ -62,37 +59,15 @@ public class CreateGroupBottomSheetFragment extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 if (etGroupName.getText().toString().isEmpty()) {
                     StringBuilder name = new StringBuilder();
-                    for (User i : selectedParticipantsList) {
+                    for (User i : selectedParticipantList) {
                         String[] tmp = i.getDisplayName().split(" ");
                         name.append(tmp[tmp.length - 1] + ",");
                     }
                     name.deleteCharAt(name.length() - 1);
-                    createNewGroup(name.toString());
+                    presenter.getInteractor().createGroup(name.toString(), selectedParticipantList);
                 } else {
-                    createNewGroup(etGroupName.getText().toString());
+                    presenter.getInteractor().createGroup(etGroupName.getText().toString(), selectedParticipantList);
                 }
-            }
-        });
-    }
-
-    private void createNewGroup(String nameGroup) {
-        List<String> chatList = new ArrayList<>();
-        chatList.add(currentUser.getUid());
-        for (User i : selectedParticipantsList) {
-            chatList.add(i.getId());
-        }
-        final GroupInfo groupInfo = new GroupInfo("", nameGroup, "default", chatList.size());
-        groupInfo.setChatList(chatList);
-        DatabaseReference referenceGroupList = FirebaseDatabase.getInstance().getReference();
-        referenceGroupList.child(Config.RF_GROUPS).push().setValue(groupInfo, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                String key = ref.getKey();
-                ref.child("id").setValue(key);
-                Intent messageActivity = new Intent(getContext(), MessageActivity.class);
-                messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfo);
-                startActivity(messageActivity);
-                getActivity().finish();
             }
         });
     }

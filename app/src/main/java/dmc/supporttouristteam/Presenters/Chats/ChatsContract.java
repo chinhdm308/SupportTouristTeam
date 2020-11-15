@@ -12,23 +12,22 @@ public interface ChatsContract {
         void navigateToUserInfoActivity();
         void navigateToAddGroupActivity();
         void navigateToSearchActivity();
+        void navigationToMessageActivity(int pos);
     }
 
     interface Presenter {
         void readChatList(FirebaseUser currentUser);
-        void chatsItemClick(int pos);
+        void doChatsItemClick(int pos);
         void navigateToUserInfoActivity();
         void navigateToAddGroupActivity();
         void navigateToSearchActivity();
     }
 
     interface Interactor {
-        void performReadChatList(FirebaseUser currentUser);
-        void preformChatsItemClick(int pos);
+        void readChatList(FirebaseUser currentUser);
     }
 
     interface OnOperationListener {
         void onReadChatList(List<GroupInfo> groupInfoList);
-        void onChatsItemClick(int pos);
     }
 }

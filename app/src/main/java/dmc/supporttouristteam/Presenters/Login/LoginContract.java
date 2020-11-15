@@ -1,5 +1,8 @@
 package dmc.supporttouristteam.Presenters.Login;
 
+import android.app.Activity;
+import android.content.Context;
+
 public interface LoginContract {
     interface View {
         void showProgress();
@@ -14,6 +17,7 @@ public interface LoginContract {
     interface Presenter {
         void validateCredentials(String username, String password);
         void navigateToRegister();
+        void checkAndRequestForPermission(Context context, Activity activity);
     }
 
     interface Interactor {

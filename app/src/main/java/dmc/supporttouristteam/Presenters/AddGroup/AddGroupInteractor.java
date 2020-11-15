@@ -1,8 +1,5 @@
 package dmc.supporttouristteam.Presenters.AddGroup;
 
-import android.content.Context;
-import android.content.Intent;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -19,7 +16,6 @@ import java.util.List;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Utils.Config;
-import dmc.supporttouristteam.Views.Activitis.MessageActivity;
 
 public class AddGroupInteractor implements AddGroupContract.Interactor {
     private AddGroupContract.OnOperationListener listener;
@@ -52,22 +48,13 @@ public class AddGroupInteractor implements AddGroupContract.Interactor {
     }
 
     @Override
-    public void search(String s, List<User> participantsList) {
-        List<User> temp = new ArrayList<>();
-        for (User user : participantsList) {
-            if (user.getDisplayName().toLowerCase().contains(s.toLowerCase())) {
-                temp.add(user);
-            }
-        }
-        listener.onSearch(temp);
-    }
-
-    @Override
-    public void createGroup(Context context, User user) {
+    public void createGroup(String nameGroup, List<User> selectedParticipantList) {
         List<String> chatList = new ArrayList<>();
         chatList.add(Config.FB_AUTH.getCurrentUser().getUid());
-        chatList.add(user.getId());
-        final GroupInfo groupInfo = new GroupInfo("", "", "", 2);
+        for (User i : selectedParticipantList) {
+            chatList.add(i.getId());
+        }
+        final GroupInfo groupInfo = new GroupInfo("", nameGroup, "default", chatList.size());
         groupInfo.setChatList(chatList);
         DatabaseReference referenceGroupList = FirebaseDatabase.getInstance().getReference();
         referenceGroupList.child(Config.RF_GROUPS).push().setValue(groupInfo, new DatabaseReference.CompletionListener() {
@@ -75,9 +62,7 @@ public class AddGroupInteractor implements AddGroupContract.Interactor {
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 String key = ref.getKey();
                 ref.child("id").setValue(key);
-                Intent messageActivity = new Intent(context, MessageActivity.class);
-                messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfo);
-                context.startActivity(messageActivity);
+                listener.onSuccess(groupInfo);
             }
         });
     }

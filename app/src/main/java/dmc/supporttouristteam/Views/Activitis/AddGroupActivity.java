@@ -1,5 +1,6 @@
 package dmc.supporttouristteam.Views.Activitis;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Presenters.AddGroup.AddGroupPresenter;
 import dmc.supporttouristteam.Presenters.AddGroup.AddGroupContract;
@@ -68,7 +70,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.search(charSequence.toString(), participantList);
+                presenter.doSearch(charSequence.toString(), participantList);
             }
 
             @Override
@@ -125,7 +127,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.top_menu_next) {
-            presenter.createGroup(AddGroupActivity.this, selectedParticipantList);
+            presenter.createGroup(selectedParticipantList);
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -138,8 +140,20 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     }
 
     @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    @Override
+    public void navigationToMessageActivity(GroupInfo groupInfo) {
+        Intent messageActivity = new Intent(AddGroupActivity.this, MessageActivity.class);
+        messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfo);
+        startActivity(messageActivity);
+    }
+
+    @Override
     public void showCreateGroupBottomSheet() {
-        CreateGroupBottomSheetFragment bottomSheetFragment = new CreateGroupBottomSheetFragment(selectedParticipantList);
+        CreateGroupBottomSheetFragment bottomSheetFragment = new CreateGroupBottomSheetFragment(selectedParticipantList, presenter);
         bottomSheetFragment.show(getSupportFragmentManager(), "Bottom Sheet");
     }
 

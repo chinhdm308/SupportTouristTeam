@@ -1,7 +1,9 @@
 package dmc.supporttouristteam.Views.Activitis;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,19 +29,21 @@ import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Presenters.Message.MessageAdapter;
 import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView textGroupName;
-    private ImageView buttonBack, buttonSend, buttonShowLocation;
+    private ImageView buttonBack, buttonSend;
+    private Button buttonShowLocation;
     private CircleImageView imageGroup;
     private EditText etMessage;
     private RecyclerView recyclerViewMessage;
     private MessageAdapter messageAdapter;
     private List<Chat> chatList;
-    private ValueEventListener seenListener;
     private GroupInfo groupInfo;
-    private FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
+    private String Uid;
+    private DatabaseReference usersRef, chatsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,35 +56,9 @@ public class MessageActivity extends AppCompatActivity {
 
         loadData();
 
-        readMessage();
-
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        buttonShowLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent locationTeamActivity = new Intent(MessageActivity.this, LocationTeamActivity.class);
-//                startActivity(locationTeamActivity);
-            }
-        });
-
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String msg = etMessage.getText().toString();
-                if (!msg.isEmpty()) {
-                    sendMessage(currentUser.getUid(), "", msg);
-                } else {
-
-                }
-                etMessage.setText("");
-            }
-        });
+        buttonBack.setOnClickListener(this);
+        buttonShowLocation.setOnClickListener(this);
+        buttonSend.setOnClickListener(this);
     }
 
     private void loadData() {
@@ -89,10 +66,12 @@ public class MessageActivity extends AppCompatActivity {
         if (groupInfo != null) {
             if (groupInfo.getNumberOfPeople() == 2) {
                 List<String> chatList = groupInfo.getChatList();
-                chatList.remove(currentUser.getUid());
-                String userID = chatList.get(0);
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Config.RF_USERS).child(userID);
-                reference.addValueEventListener(new ValueEventListener() {
+                if (!chatList.get(0).equals(Common.loggedUser.getId())) {
+                    Uid = chatList.get(0);
+                } else {
+                    Uid = chatList.get(1);
+                }
+                usersRef.child(Uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         User user = snapshot.getValue(User.class);
@@ -113,19 +92,17 @@ public class MessageActivity extends AppCompatActivity {
                 }
                 textGroupName.setText(groupInfo.getName());
             }
+            readMessage();
         }
     }
 
     private void sendMessage(String sender, String receiver, String message) {
         Chat chat = new Chat(sender, receiver, message, false);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child(Config.RF_CHATS).child(groupInfo.getId()).push().setValue(chat);
+        chatsRef.child(groupInfo.getId()).push().setValue(chat);
     }
 
     private void readMessage() {
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Config.RF_CHATS)
-                .child(groupInfo.getId());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        chatsRef.child(groupInfo.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chatList.clear();
@@ -133,7 +110,7 @@ public class MessageActivity extends AppCompatActivity {
                     Chat chat = snapshot.getValue(Chat.class);
                     chatList.add(chat);
                 }
-                messageAdapter = new MessageAdapter(MessageActivity.this, chatList);
+                messageAdapter = new MessageAdapter(chatList);
                 recyclerViewMessage.setAdapter(messageAdapter);
             }
 
@@ -159,10 +136,33 @@ public class MessageActivity extends AppCompatActivity {
         recyclerViewMessage.setLayoutManager(linearLayoutManager);
 
         chatList = new ArrayList<>();
+
+        usersRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
+        chatsRef = FirebaseDatabase.getInstance().getReference(Config.RF_CHATS);
     }
 
     private GroupInfo getDataToIntent() {
-        GroupInfo groupInfo = (GroupInfo) getIntent().getSerializableExtra(Config.EXTRA_GROUP_INFO);
-        return (groupInfo != null) ? groupInfo : null;
+        return (GroupInfo) getIntent().getSerializableExtra(Config.EXTRA_GROUP_INFO);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_back:
+                finish();
+                break;
+            case R.id.button_show_location:
+                Intent trackingActivity = new Intent(MessageActivity.this, TrackingActivity.class);
+                trackingActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfo);
+                startActivity(trackingActivity);
+                break;
+            case R.id.button_send:
+                String msg = etMessage.getText().toString();
+                if (!msg.isEmpty()) {
+                    sendMessage(Common.loggedUser.getId(), "", msg);
+                }
+                etMessage.setText("");
+                break;
+        }
     }
 }

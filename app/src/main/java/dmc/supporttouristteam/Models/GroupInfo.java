@@ -1,5 +1,7 @@
 package dmc.supporttouristteam.Models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +63,11 @@ public class GroupInfo implements Serializable {
 
     public void setChatList(List<String> chatList) {
         this.chatList = chatList;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.name;
     }
 }

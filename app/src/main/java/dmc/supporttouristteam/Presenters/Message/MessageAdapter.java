@@ -1,6 +1,5 @@
 package dmc.supporttouristteam.Presenters.Message;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,34 +9,37 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.Chat;
+import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
+import dmc.supporttouristteam.Utils.Config;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-    private Context mContext;
     private List<Chat> mData;
-    public static final int MSG_TYPE_LEFT = 0;
-    public static final int MSG_TYPE_RIGHT = 1;
+    private DatabaseReference usersRef;
 
-    public MessageAdapter(Context mContext, List<Chat> mData) {
-        this.mContext = mContext;
+    public MessageAdapter(List<Chat> mData) {
         this.mData = mData;
+        this.usersRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
     }
 
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == MSG_TYPE_LEFT) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_msg_item_left, parent, false);
+        if (viewType == Config.MSG_TYPE_LEFT) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_item_left, parent, false);
         } else {
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_msg_item_right, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_msg_item_right, parent, false);
         }
         return new MessageViewHolder(view);
     }
@@ -46,17 +48,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Chat chat = mData.get(position);
         holder.showMessage.setText(chat.getMessage());
+        if (!chat.getSender().equals(Common.loggedUser.getId())) {
+            usersRef.child(chat.getSender()).child("profileImg").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.getValue() != null)
+                        Glide.with(holder.itemView.getContext())
+                                .load(snapshot.getValue().toString())
+                                .into(holder.profileImage);
+                }
 
-        Glide.with(mContext).load(R.drawable.user1).into(holder.profileImage);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-        if (position == mData.size() - 1) {
-            if (chat.isSeen()) {
-                holder.txtSeen.setText("Seen");
-            } else {
-                holder.txtSeen.setText("Delivered");
-            }
-        } else {
-            holder.txtSeen.setVisibility(View.GONE);
+                }
+            });
         }
     }
 
@@ -67,23 +73,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profileImage;
-        TextView showMessage, txtSeen;
+        TextView showMessage;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.image_user);
             showMessage = itemView.findViewById(R.id.show_message);
-            txtSeen = itemView.findViewById(R.id.txt_seen);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mData.get(position).getSender().equals(currentUser.getUid())) {
-            return MSG_TYPE_RIGHT;
+        if (mData.get(position).getSender().equals(Common.loggedUser.getId())) {
+            return Config.MSG_TYPE_RIGHT;
         } else {
-            return MSG_TYPE_LEFT;
+            return Config.MSG_TYPE_LEFT;
         }
     }
 }

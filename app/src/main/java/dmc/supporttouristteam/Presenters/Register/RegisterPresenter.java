@@ -34,11 +34,11 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 // show explanation
-                Common.showExplanation(context, activity, "Permission Needed", "Rationale",
+                Common.showExplanation(context, activity, "", "Bạn cần cấp quyền cho ứng dụng",
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Config.REQUEST_CODE_READ_EXTERNAL_STORAGE);
+                        Config.MY_REQUEST_CODE);
             } else {
-                Common.requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Config.REQUEST_CODE_READ_EXTERNAL_STORAGE);
+                Common.requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Config.MY_REQUEST_CODE);
             }
         } else {
             interactor.openGallery(activity);

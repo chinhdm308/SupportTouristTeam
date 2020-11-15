@@ -20,13 +20,14 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.Presenters.Chats.ItemChatsAdapter;
 import dmc.supporttouristteam.Models.GroupInfo;
-import dmc.supporttouristteam.Presenters.Chats.ChatsPresenter;
+import dmc.supporttouristteam.Presenters.Chats.ChatsAdapter;
 import dmc.supporttouristteam.Presenters.Chats.ChatsContract;
+import dmc.supporttouristteam.Presenters.Chats.ChatsPresenter;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Activitis.AddGroupActivity;
+import dmc.supporttouristteam.Views.Activitis.MessageActivity;
 import dmc.supporttouristteam.Views.Activitis.SearchActivity;
 import dmc.supporttouristteam.Views.Activitis.UserInfoActivity;
 
@@ -35,7 +36,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     private TextView textName;
     private Button buttonAddGroup, buttonSearch;
     private RecyclerView recyclerChats;
-    private ItemChatsAdapter itemChatsAdapter;
+    private ChatsAdapter chatsAdapter;
     private List<GroupInfo> groupInfoList;
     private FirebaseUser currentUser;
     private ChatsPresenter presenter;
@@ -43,8 +44,9 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         init(view);
-        currentUser = Config.FB_AUTH.getCurrentUser();
+
         // load uer info
         Glide.with(view.getContext()).load(currentUser.getPhotoUrl())
                 .placeholder(R.drawable.add_user_male_100).into(photo);
@@ -64,14 +66,17 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
         buttonAddGroup = view.findViewById(R.id.button_add_group);
         buttonSearch = view.findViewById(R.id.button_search);
         recyclerChats = view.findViewById(R.id.recycler_chats);
+
+        currentUser = Config.FB_AUTH.getCurrentUser();
     }
 
     @Override
     public void setRecyclerChats(List<GroupInfo> groupInfoList) {
+        this.groupInfoList = groupInfoList;
         recyclerChats.setHasFixedSize(true);
         recyclerChats.setLayoutManager(new LinearLayoutManager(getContext()));
-        itemChatsAdapter = new ItemChatsAdapter(groupInfoList, presenter);
-        recyclerChats.setAdapter(itemChatsAdapter);
+        chatsAdapter = new ChatsAdapter(groupInfoList, presenter);
+        recyclerChats.setAdapter(chatsAdapter);
     }
 
     @Override
@@ -87,6 +92,13 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     @Override
     public void navigateToSearchActivity() {
         startActivity(new Intent(getContext(), SearchActivity.class));
+    }
+
+    @Override
+    public void navigationToMessageActivity(int pos) {
+        Intent messageActivity = new Intent(getContext(), MessageActivity.class);
+        messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfoList.get(pos));
+        startActivity(messageActivity);
     }
 
     @Override
@@ -106,6 +118,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
                 presenter.navigateToAddGroupActivity();
                 break;
             case R.id.button_search:
+                presenter.navigateToSearchActivity();
                 break;
         }
     }

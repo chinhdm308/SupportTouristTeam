@@ -9,12 +9,15 @@ public class Config {
     public static final String RF_GROUPS = "GROUPS";
     public static final String RF_CHATS = "CHATS";
     public static final String RF_PHOTOS = "USER_PHOTOS";
+    public static final String RF_PUBLIC_LOCATION = "PUBLIC_LOCATION";
 
-    public static final String BUNDLE_GROUP_INFO = "BUNDLE_GROUP_INFO";
     public static final String EXTRA_GROUP_INFO = "EXTRA_GROUP_INFO";
-
-    public static final String BUNDLE_USER = "BUNDLE_USER";
     public static final String EXTRA_USER = "EXTRA_USER";
 
-    public static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 1;
+    public static final int MSG_TYPE_LEFT = 0;
+    public static final int MSG_TYPE_RIGHT = 1;
+
+    public static final int MY_REQUEST_CODE = 1;
+
+    public static final String USER_UID_SAVE_KEY = "SaveUid";
 }

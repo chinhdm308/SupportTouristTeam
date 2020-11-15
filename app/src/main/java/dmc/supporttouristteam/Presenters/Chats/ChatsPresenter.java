@@ -17,12 +17,7 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
 
     @Override
     public void readChatList(FirebaseUser currentUser) {
-        interactor.performReadChatList(currentUser);
-    }
-
-    @Override
-    public void chatsItemClick(int pos) {
-        interactor.preformChatsItemClick(pos);
+        interactor.readChatList(currentUser);
     }
 
     @Override
@@ -46,9 +41,7 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
     }
 
     @Override
-    public void onChatsItemClick(int pos) {
-//        Intent messageActivity = new Intent(getContext(), MessageActivity.class);
-//        messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfoList.get(pos));
-//        startActivity(messageActivity);
+    public void doChatsItemClick(int pos) {
+        view.navigationToMessageActivity(pos);
     }
 }

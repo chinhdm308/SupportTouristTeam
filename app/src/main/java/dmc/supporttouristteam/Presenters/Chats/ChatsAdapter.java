@@ -19,19 +19,23 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
-public class ItemChatsAdapter extends RecyclerView.Adapter<ItemChatsAdapter.ChatsViewHolder> {
-    private ChatsPresenter presenter;
+public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
+    private ChatsContract.Presenter presenter;
     private List<GroupInfo> groupInfoList;
-    private FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
+    private FirebaseUser currentUser;
+    private DatabaseReference usersRef;
 
-    public ItemChatsAdapter(List<GroupInfo> groupInfoList, ChatsPresenter presenter) {
+    public ChatsAdapter(List<GroupInfo> groupInfoList, ChatsContract.Presenter presenter) {
         this.groupInfoList = groupInfoList;
         this.presenter = presenter;
+        this.currentUser = Config.FB_AUTH.getCurrentUser();
+        usersRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
     }
 
     @NonNull
@@ -45,12 +49,15 @@ public class ItemChatsAdapter extends RecyclerView.Adapter<ItemChatsAdapter.Chat
     @Override
     public void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position) {
         GroupInfo groupInfo = groupInfoList.get(position);
+        String userID;
         if (groupInfo.getNumberOfPeople() == 2) {
             List<String> chatList = groupInfo.getChatList();
-            chatList.remove(currentUser.getUid());
-            String userID = chatList.get(0);
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Config.RF_USERS).child(userID);
-            reference.addValueEventListener(new ValueEventListener() {
+            if (!chatList.get(0).equals(Common.loggedUser.getId())) {
+                userID = chatList.get(0);
+            } else {
+                userID = chatList.get(1);
+            }
+            usersRef.child(userID).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
@@ -65,7 +72,7 @@ public class ItemChatsAdapter extends RecyclerView.Adapter<ItemChatsAdapter.Chat
             });
         } else {
             if (groupInfo.getImage().equals("default")) {
-                Glide.with(holder.itemView.getContext()).load(R.drawable.user1  ).into(holder.photo);
+                Glide.with(holder.itemView.getContext()).load(R.drawable.user1).into(holder.photo);
             } else {
                 Glide.with(holder.itemView.getContext()).load(groupInfo.getImage()).into(holder.photo);
             }
@@ -89,7 +96,7 @@ public class ItemChatsAdapter extends RecyclerView.Adapter<ItemChatsAdapter.Chat
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    presenter.chatsItemClick(getAdapterPosition());
+                    presenter.doChatsItemClick(getAdapterPosition());
                 }
             });
         }
