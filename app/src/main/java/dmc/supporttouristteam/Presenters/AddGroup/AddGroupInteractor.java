@@ -3,7 +3,6 @@ package dmc.supporttouristteam.Presenters.AddGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,6 +14,7 @@ import java.util.List;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class AddGroupInteractor implements AddGroupContract.Interactor {
@@ -26,14 +26,14 @@ public class AddGroupInteractor implements AddGroupContract.Interactor {
     }
 
     @Override
-    public void readParticipants(DatabaseReference reference, FirebaseUser currentUser) {
+    public void readParticipants(DatabaseReference reference) {
         participantsList = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     User user = i.getValue(User.class);
-                    if (!user.getId().equals(currentUser.getUid())) {
+                    if (!user.getId().equals(Common.currentUser.getUid())) {
                         participantsList.add(user);
                     }
                 }
@@ -50,7 +50,7 @@ public class AddGroupInteractor implements AddGroupContract.Interactor {
     @Override
     public void createGroup(String nameGroup, List<User> selectedParticipantList) {
         List<String> chatList = new ArrayList<>();
-        chatList.add(Config.FB_AUTH.getCurrentUser().getUid());
+        chatList.add(Common.currentUser.getUid());
         for (User i : selectedParticipantList) {
             chatList.add(i.getId());
         }

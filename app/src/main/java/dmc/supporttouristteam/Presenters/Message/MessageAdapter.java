@@ -19,6 +19,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.Models.Chat;
+import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
@@ -48,14 +49,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Chat chat = mData.get(position);
         holder.showMessage.setText(chat.getMessage());
-        if (!chat.getSender().equals(Common.loggedUser.getId())) {
-            usersRef.child(chat.getSender()).child("profileImg").addValueEventListener(new ValueEventListener() {
+        if (!chat.getSender().equals(Common.currentUser.getUid())) {
+            usersRef.child(chat.getSender()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.getValue() != null)
+                    if (snapshot.getValue() != null) {
+                        User user = snapshot.getValue(User.class);
+                        holder.txtName.setText(user.getDisplayName());
                         Glide.with(holder.itemView.getContext())
-                                .load(snapshot.getValue().toString())
+                                .load(user.getProfileImg())
                                 .into(holder.profileImage);
+                    }
                 }
 
                 @Override
@@ -73,18 +77,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profileImage;
-        TextView showMessage;
+        TextView showMessage, txtName;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.image_user);
             showMessage = itemView.findViewById(R.id.show_message);
+            txtName = itemView.findViewById(R.id.txt_name);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mData.get(position).getSender().equals(Common.loggedUser.getId())) {
+        if (mData.get(position).getSender().equals(Common.currentUser.getUid())) {
             return Config.MSG_TYPE_RIGHT;
         } else {
             return Config.MSG_TYPE_LEFT;

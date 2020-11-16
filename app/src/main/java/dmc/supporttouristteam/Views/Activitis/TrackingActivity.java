@@ -91,13 +91,14 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             if (data.getValue() != null) {
                 MyLocation location = data.getValue(MyLocation.class);
                 if (groupInfo.getChatList().contains(location.getId())) {
-                    if (location.getId().equals(Common.loggedUser.getId()))
+                    if (location.getId().equals(Common.currentUser.getUid())) {
                         curUser = new LatLng(location.getLatitude(), location.getLongitude());
+                    }
                     // Add Marker
                     LatLng userMarker = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(userMarker)
                             .title("Hehe")
-                            .snippet(Common.getDateFormatted(Common.convertTimeStampToDate(location.getTime()))));
+                            .snippet(Common.convertTimeStampToString(location.getTime())));
                 }
             }
         }

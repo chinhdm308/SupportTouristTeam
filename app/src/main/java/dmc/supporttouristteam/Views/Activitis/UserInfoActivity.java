@@ -9,18 +9,17 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseUser;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class UserInfoActivity extends AppCompatActivity {
     private CircleImageView userPhoto;
     private TextView textEmail, textUsername;
     private Button buttonLogout;
-    private FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,43 +31,41 @@ public class UserInfoActivity extends AppCompatActivity {
 
         init();
 
-        User user = getDataToIntent();
-
-        if (getDataToIntent() == null) {
-            loadData("Tên: " + currentUser.getDisplayName(),
-                    currentUser.getPhotoUrl().toString(),
-                    "Email: " + currentUser.getEmail());
-        } else {
-            loadData("Tên: " + user.getDisplayName(),
-                    user.getProfileImg(),
-                    "Email: " + user.getEmail());
-        }
+        loadUserInfo();
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Config.FB_AUTH.signOut();
+                Common.FB_AUTH.signOut();
                 startActivity(new Intent(UserInfoActivity.this, LoginActivity.class));
                 finish();
             }
         });
     }
 
-    private void loadData(String username, String photo, String email) {
-        Glide.with(this).load(photo).into(userPhoto);
-        textUsername.setText(username);
-        textEmail.setText(email);
+    private void loadUserInfo() {
+        User user = getDataToIntent();
+        if (user != null) {
+            buttonLogout.setVisibility(View.INVISIBLE);
+            Glide.with(this).load(user.getProfileImg()).into(userPhoto);
+            textUsername.setText(user.getDisplayName());
+            textEmail.setText(user.getEmail());
+        } else {
+            buttonLogout.setVisibility(View.VISIBLE);
+            Glide.with(this).load(Common.currentUser.getPhotoUrl()).into(userPhoto);
+            textUsername.setText(Common.currentUser.getDisplayName());
+            textEmail.setText(Common.currentUser.getEmail());
+        }
     }
 
     private User getDataToIntent() {
-        User user = (User) getIntent().getSerializableExtra(Config.EXTRA_USER);
-        return (user != null) ? user : null;
+        return (User) getIntent().getSerializableExtra(Config.EXTRA_USER);
     }
 
     private void init() {
         userPhoto = findViewById(R.id.image_user);
-        textUsername = findViewById(R.id.text_user_name);
-        textEmail = findViewById(R.id.text_user_email);
+        textUsername = findViewById(R.id.txt_name);
+        textEmail = findViewById(R.id.txt_email);
         buttonLogout = findViewById(R.id.button_logout);
     }
 

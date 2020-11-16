@@ -28,7 +28,7 @@ public class SelectedParticipantsAdapter extends RecyclerView.Adapter<SelectedPa
     public SelectedParticipantsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_selected_participants, parent, false);
-       return new SelectedParticipantsViewHolder(view);
+        return new SelectedParticipantsViewHolder(view);
     }
 
     @Override

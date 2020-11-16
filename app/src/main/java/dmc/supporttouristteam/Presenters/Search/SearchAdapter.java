@@ -13,10 +13,10 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.R;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SeearchViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
     private List<User> userList;
 
@@ -26,14 +26,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SeearchVie
 
     @NonNull
     @Override
-    public SeearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_chats, parent, false);
-        return new SeearchViewHolder(view);
+        return new SearchViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SeearchViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
         User user = userList.get(position);
         Glide.with(holder.itemView.getContext()).load(user.getProfileImg()).into(holder.photo);
         holder.name.setText(user.getDisplayName());
@@ -44,13 +44,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SeearchVie
         return userList.size();
     }
 
-    public class SeearchViewHolder extends RecyclerView.ViewHolder {
+    public class SearchViewHolder extends RecyclerView.ViewHolder {
         CircleImageView photo;
         TextView name;
-        public SeearchViewHolder(@NonNull View itemView) {
+        public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
-            photo = (CircleImageView) itemView.findViewById(R.id.item_chats_photo);
-            name = (TextView) itemView.findViewById(R.id.item_chats_name);
+            photo = itemView.findViewById(R.id.item_chats_photo);
+            name = itemView.findViewById(R.id.item_chats_name);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

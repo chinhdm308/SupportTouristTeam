@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -23,11 +22,12 @@ import java.util.List;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
-import dmc.supporttouristteam.Presenters.AddGroup.AddGroupPresenter;
 import dmc.supporttouristteam.Presenters.AddGroup.AddGroupContract;
+import dmc.supporttouristteam.Presenters.AddGroup.AddGroupPresenter;
 import dmc.supporttouristteam.Presenters.AddGroup.ParticipantsAdapter;
 import dmc.supporttouristteam.Presenters.AddGroup.SelectedParticipantsAdapter;
 import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Fragments.CreateGroupBottomSheetFragment;
 
@@ -37,10 +37,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     private ParticipantsAdapter participantsAdapter;
     private SelectedParticipantsAdapter selectedParticipantsAdapter;
 
-    private List<User> participantList;
-    private List<User> selectedParticipantList;
-
-    private FirebaseUser currentUser;
+    private List<User> participantList, selectedParticipantList;
 
     private AddGroupPresenter presenter;
 
@@ -55,7 +52,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
         init();
 
         presenter = new AddGroupPresenter(this);
-        presenter.readParticipants(FirebaseDatabase.getInstance().getReference(Config.RF_USERS), currentUser);
+        presenter.doReadParticipants(FirebaseDatabase.getInstance().getReference(Config.RF_USERS));
         setRecyclerSelectedParticipants(selectedParticipantList);
 
         search();
@@ -83,13 +80,13 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     @Override
     public void setRecyclerParticipants(List<User> participantList) {
         this.participantList = participantList;
-        participantsAdapter = new ParticipantsAdapter(participantList, presenter);
+        participantsAdapter = new ParticipantsAdapter(participantList, presenter, selectedParticipantList);
         recyclerParticipants.setAdapter(participantsAdapter);
     }
 
     @Override
     public void setRecyclerParticipantsAfterSearch(List<User> participantList) {
-        participantsAdapter = new ParticipantsAdapter(participantList, presenter);
+        participantsAdapter = new ParticipantsAdapter(participantList, presenter, selectedParticipantList);
         recyclerParticipants.setAdapter(participantsAdapter);
     }
 
@@ -100,14 +97,14 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     }
 
     @Override
-    public void addParticipant(int pos) {
-        selectedParticipantList.add(participantList.get(pos));
+    public void addParticipant(User user) {
+        selectedParticipantList.add(user);
         selectedParticipantsAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void removeParticipant(int pos) {
-        selectedParticipantList.remove(participantList.get(pos));
+    public void removeParticipant(User user) {
+        selectedParticipantList.remove(user);
         selectedParticipantsAdapter.notifyDataSetChanged();
     }
 
@@ -127,7 +124,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.top_menu_next) {
-            presenter.createGroup(selectedParticipantList);
+            presenter.doCreateGroup(selectedParticipantList);
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -146,6 +143,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
 
     @Override
     public void navigationToMessageActivity(GroupInfo groupInfo) {
+        Common.groupClicked = groupInfo;
         Intent messageActivity = new Intent(AddGroupActivity.this, MessageActivity.class);
         messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfo);
         startActivity(messageActivity);
@@ -171,7 +169,5 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
 
         selectedParticipantList = new ArrayList<>();
         participantList = new ArrayList<>();
-
-        currentUser = Config.FB_AUTH.getCurrentUser();
     }
 }

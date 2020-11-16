@@ -11,20 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Presenters.AddGroup.AddGroupContract;
 import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.Utils.Config;
 
 public class CreateGroupBottomSheetFragment extends BottomSheetDialogFragment {
     private EditText etGroupName;
     private Button buttonCancel, buttonCreate;
     private List<User> selectedParticipantList;
-    private FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
 
     private AddGroupContract.Presenter presenter;
 

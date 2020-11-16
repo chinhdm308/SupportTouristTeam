@@ -22,6 +22,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class RegisterInteractor implements RegisterContract.Interactor {
@@ -40,13 +41,13 @@ public class RegisterInteractor implements RegisterContract.Interactor {
     @Override
     public void register(String name, String email, String password, Uri pickedImgUri) {
         // this method create user account with specific email and password
-        Config.FB_AUTH.createUserWithEmailAndPassword(email, password)
+        Common.FB_AUTH.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
+                            FirebaseUser currentUser = Common.FB_AUTH.getCurrentUser();
                             updateUserInfo(name, pickedImgUri, currentUser);
                         } else {
                             // If sign in fails, display a message to the user.

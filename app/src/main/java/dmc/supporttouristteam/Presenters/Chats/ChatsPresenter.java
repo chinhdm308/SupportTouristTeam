@@ -1,7 +1,5 @@
 package dmc.supporttouristteam.Presenters.Chats;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.List;
 
 import dmc.supporttouristteam.Models.GroupInfo;
@@ -16,8 +14,8 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
     }
 
     @Override
-    public void readChatList(FirebaseUser currentUser) {
-        interactor.readChatList(currentUser);
+    public void doReadChatList() {
+        interactor.readChatList();
     }
 
     @Override

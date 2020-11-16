@@ -1,7 +1,5 @@
 package dmc.supporttouristteam.Presenters.Chats;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.List;
 
 import dmc.supporttouristteam.Models.GroupInfo;
@@ -16,7 +14,7 @@ public interface ChatsContract {
     }
 
     interface Presenter {
-        void readChatList(FirebaseUser currentUser);
+        void doReadChatList();
         void doChatsItemClick(int pos);
         void navigateToUserInfoActivity();
         void navigateToAddGroupActivity();
@@ -24,7 +22,7 @@ public interface ChatsContract {
     }
 
     interface Interactor {
-        void readChatList(FirebaseUser currentUser);
+        void readChatList();
     }
 
     interface OnOperationListener {

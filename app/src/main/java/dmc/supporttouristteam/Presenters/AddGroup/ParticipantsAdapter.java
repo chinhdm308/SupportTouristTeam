@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,16 +14,17 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.R;
 
 public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapter.ParticipantViewHolder> {
-    private List<User> userList;
+    private List<User> userList, userStatusList;
     private AddGroupContract.Presenter presenter;
 
-    public ParticipantsAdapter(List<User> userList, AddGroupContract.Presenter presenter) {
+    public ParticipantsAdapter(List<User> userList, AddGroupContract.Presenter presenter, List<User> userStatusList) {
         this.userList = userList;
         this.presenter = presenter;
+        this.userStatusList = userStatusList;
     }
 
     @NonNull
@@ -40,6 +40,11 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         User user = userList.get(position);
         Glide.with(holder.itemView.getContext()).load(user.getProfileImg()).into(holder.photo);
         holder.name.setText(user.getDisplayName());
+        if (userStatusList.contains(user)) {
+            holder.checkBox.setChecked(true);
+        } else {
+            holder.checkBox.setChecked(false);
+        }
     }
 
     @Override
@@ -51,16 +56,17 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         CircleImageView photo;
         TextView name;
         CheckBox checkBox;
+
         public ParticipantViewHolder(@NonNull View itemView) {
             super(itemView);
             photo = itemView.findViewById(R.id.item_participant_photo);
             name = itemView.findViewById(R.id.item_participant_name);
             checkBox = itemView.findViewById(R.id.item_participant_check_box);
-
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    presenter.onParticipantItemClick(getAdapterPosition(), b);
+                public void onClick(View v) {
+                    boolean b = checkBox.isChecked();
+                    presenter.doParticipantItemClick(userList.get(getAdapterPosition()), b);
                 }
             });
         }

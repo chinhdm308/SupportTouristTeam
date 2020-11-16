@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,13 +27,11 @@ import dmc.supporttouristteam.Utils.Config;
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
     private ChatsContract.Presenter presenter;
     private List<GroupInfo> groupInfoList;
-    private FirebaseUser currentUser;
     private DatabaseReference usersRef;
 
     public ChatsAdapter(List<GroupInfo> groupInfoList, ChatsContract.Presenter presenter) {
         this.groupInfoList = groupInfoList;
         this.presenter = presenter;
-        this.currentUser = Config.FB_AUTH.getCurrentUser();
         usersRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
     }
 
@@ -52,7 +49,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         String userID;
         if (groupInfo.getNumberOfPeople() == 2) {
             List<String> chatList = groupInfo.getChatList();
-            if (!chatList.get(0).equals(Common.loggedUser.getId())) {
+            if (!chatList.get(0).equals(Common.currentUser.getUid())) {
                 userID = chatList.get(0);
             } else {
                 userID = chatList.get(1);
@@ -91,8 +88,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
-            photo = (CircleImageView) itemView.findViewById(R.id.item_chats_photo);
-            name = (TextView) itemView.findViewById(R.id.item_chats_name);
+            photo = itemView.findViewById(R.id.item_chats_photo);
+            name = itemView.findViewById(R.id.item_chats_name);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

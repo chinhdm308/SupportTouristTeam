@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,27 +19,30 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.Presenters.Search.SearchAdapter;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.Presenters.Search.SearchAdapter;
 import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class SearchActivity extends AppCompatActivity {
     private RecyclerView recyclerSearch;
     private SearchAdapter searchAdapter;
     private EditText editTextSearch;
-    private List<User> userList;
-    private List<User> tmp;
-    private FirebaseUser currentUser = Config.FB_AUTH.getCurrentUser();
+    private List<User> userList, tmp;
+    private DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         getSupportActionBar().hide();
+
         init();
-        initialize();
+
         setRecyclerSearch();
+
         search();
     }
 
@@ -59,8 +61,8 @@ public class SearchActivity extends AppCompatActivity {
                         tmp.add(user);
                     }
                 }
-//                searchAdapter = new SearchAdapter(tmp, SearchActivity.this);
-//                recyclerSearch.setAdapter(searchAdapter);
+                searchAdapter = new SearchAdapter(tmp);
+                recyclerSearch.setAdapter(searchAdapter);
             }
 
             @Override
@@ -71,20 +73,16 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setRecyclerSearch() {
-        recyclerSearch.setHasFixedSize(true);
-        recyclerSearch.setLayoutManager(new LinearLayoutManager(this));
-        userList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
-        reference.addValueEventListener(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     User user = i.getValue(User.class);
-                    if (!user.getId().equals(currentUser.getUid())) {
+                    if (!user.getId().equals(Common.currentUser.getUid())) {
                         userList.add(user);
                     }
                 }
-//                searchAdapter = new SearchAdapter(userList, SearchActivity.this);
+                searchAdapter = new SearchAdapter(userList);
                 recyclerSearch.setAdapter(searchAdapter);
             }
 
@@ -97,25 +95,14 @@ public class SearchActivity extends AppCompatActivity {
 
     private void init() {
         editTextSearch = findViewById(R.id.et_search);
+
         recyclerSearch = findViewById(R.id.recycler_search);
-    }
+        recyclerSearch.setHasFixedSize(true);
+        recyclerSearch.setLayoutManager(new LinearLayoutManager(this));
 
-//    @Override
-//    public void onChatsItemClick(int pos) {
-//        User user;
-//        if (tmp.size() > 0) {
-//            user = tmp.get(pos);
-//        } else {
-//            user = userList.get(pos);
-//        }
-//
-//        Intent intentUserInfo = new Intent(SearchActivity.this, UserInfoActivity.class);
-//        intentUserInfo.putExtra(Config.EXTRA_USER, user);
-//        startActivity(intentUserInfo);
-//        finish();
-//    }
-
-    private void initialize() {
+        userList = new ArrayList<>();
         tmp = new ArrayList<>();
+
+        userRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
     }
 }

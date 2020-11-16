@@ -1,6 +1,5 @@
 package dmc.supporttouristteam.Presenters.AddGroup;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
@@ -13,8 +12,8 @@ public interface AddGroupContract {
         void setRecyclerParticipants(List<User> participantList);
         void setRecyclerParticipantsAfterSearch(List<User> participantList);
         void setRecyclerSelectedParticipants(List<User> selectedParticipantList);
-        void addParticipant(int pos);
-        void removeParticipant(int pos);
+        void addParticipant(User user);
+        void removeParticipant(User user);
         void showCreateGroupBottomSheet();
         void showMessage(String message);
         void finishActivity();
@@ -22,15 +21,15 @@ public interface AddGroupContract {
     }
 
     interface Presenter {
-        void readParticipants(DatabaseReference reference, FirebaseUser currentUser);
+        void doReadParticipants(DatabaseReference reference);
         void doSearch(String s, List<User> participantList);
-        void createGroup(List<User> selectedParticipantList);
-        void onParticipantItemClick(int pos, boolean isAdd);
+        void doCreateGroup(List<User> selectedParticipantList);
+        void doParticipantItemClick(User user, boolean isAdd);
         Interactor getInteractor();
     }
 
     interface Interactor {
-        void readParticipants(DatabaseReference reference, FirebaseUser currentUser);
+        void readParticipants(DatabaseReference reference);
         void createGroup(String nameGroup, List<User> selectedParticipantList);
     }
 

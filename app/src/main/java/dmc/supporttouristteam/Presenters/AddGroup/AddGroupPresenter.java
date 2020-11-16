@@ -1,10 +1,11 @@
 package dmc.supporttouristteam.Presenters.AddGroup;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
@@ -19,15 +20,21 @@ public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupCo
     }
 
     @Override
-    public void readParticipants(DatabaseReference reference, FirebaseUser currentUser) {
-        interactor.readParticipants(reference, currentUser);
+    public void doReadParticipants(DatabaseReference reference) {
+        interactor.readParticipants(reference);
+    }
+
+    private String removeAccent(String s) {
+        String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(temp).replaceAll("");
     }
 
     @Override
     public void doSearch(String s, List<User> participantList) {
         List<User> temp = new ArrayList<>();
         for (User user : participantList) {
-            if (user.getDisplayName().toLowerCase().contains(s.toLowerCase())) {
+            if (removeAccent(user.getDisplayName().toLowerCase()).contains(removeAccent(s.toLowerCase()))) {
                 temp.add(user);
             }
         }
@@ -35,9 +42,9 @@ public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupCo
     }
 
     @Override
-    public void createGroup(List<User> selectedParticipantList) {
+    public void doCreateGroup(List<User> selectedParticipantList) {
         if (selectedParticipantList.size() == 0) {
-             view.showMessage("Chưa có thành viên nào");
+            view.showMessage("Chưa có thành viên nào");
         }
         if (selectedParticipantList.size() == 1) {
             interactor.createGroup("", selectedParticipantList);
@@ -59,11 +66,11 @@ public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupCo
     }
 
     @Override
-    public void onParticipantItemClick(int pos, boolean isAdd) {
+    public void doParticipantItemClick(User user, boolean isAdd) {
         if (isAdd) {
-            view.addParticipant(pos);
+            view.addParticipant(user);
         } else {
-            view.removeParticipant(pos);
+            view.removeParticipant(user);
         }
     }
 

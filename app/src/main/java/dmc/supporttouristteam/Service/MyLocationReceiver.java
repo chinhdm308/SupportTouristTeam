@@ -15,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
-import io.paperdb.Paper;
 
 public class MyLocationReceiver extends BroadcastReceiver {
     public static final String ACTION = "dmc.supporttouristteam.UPDATE_LOCATION";
@@ -29,29 +28,20 @@ public class MyLocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Paper.init(context);
-        uid = Paper.book().read(Config.USER_UID_SAVE_KEY);
+        uid = Common.currentUser.getUid();
         if (intent != null) {
             final String action = intent.getAction();
             if (action.equals(ACTION)) {
                 LocationResult result = LocationResult.extractResult(intent);
                 if (result != null) {
                     Location location = result.getLastLocation();
-                    if (Common.loggedUser != null) { // App in foreground
-                        publicLocationRef.child(Common.loggedUser.getId()).setValue(location, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                ref.child("id").setValue(uid);
-                            }
-                        });
-                    } else { // App     be killed
-                        publicLocationRef.child(uid).setValue(location, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                ref.child("id").setValue(uid);
-                            }
-                        });
-                    }
+                    publicLocationRef.child(Common.currentUser.getUid())
+                            .setValue(location, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    ref.child("id").setValue(uid);
+                                }
+                            });
                 }
             }
         }

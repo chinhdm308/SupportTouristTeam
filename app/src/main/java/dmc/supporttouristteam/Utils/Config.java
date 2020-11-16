@@ -1,9 +1,6 @@
 package dmc.supporttouristteam.Utils;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 public class Config {
-    public  static FirebaseAuth FB_AUTH = FirebaseAuth.getInstance();
 
     public static final String RF_USERS = "USERS";
     public static final String RF_GROUPS = "GROUPS";
@@ -18,6 +15,4 @@ public class Config {
     public static final int MSG_TYPE_RIGHT = 1;
 
     public static final int MY_REQUEST_CODE = 1;
-
-    public static final String USER_UID_SAVE_KEY = "SaveUid";
 }
