@@ -5,12 +5,13 @@
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the "MyLocation" functionality.
+         location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -32,12 +33,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <service
+            android:name=".Service.TrackerService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".Views.Activitis.TrackingActivity"
-            android:label="@string/title_activity_tracking"></activity>
-
-        <receiver android:name=".Service.MyLocationReceiver" />
-
+            android:label="@string/title_activity_tracking" />
+        <activity
+            android:name=".Views.Activitis.FindNearbyPlacesActivity"
+            android:label="@string/title_activity_find_nearby_places" />
         <activity
             android:name=".Views.Activitis.MainActivity"
             android:windowSoftInputMode="stateHidden" />

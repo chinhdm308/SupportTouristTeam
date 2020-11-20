@@ -7,8 +7,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_user"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:scaleType="centerCrop"
         android:src="@drawable/add_user_male_100"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -28,7 +28,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout5"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="275dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:hint="Email"
@@ -49,7 +49,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout6"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="275dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Mật khẩu"
@@ -69,7 +69,7 @@
 
     <Button
         android:id="@+id/button_login"
-        android:layout_width="192dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_button_style"
         android:text="Đăng nhập"

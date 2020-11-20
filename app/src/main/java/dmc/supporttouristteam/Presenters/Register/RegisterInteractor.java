@@ -21,7 +21,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import dmc.supporttouristteam.Models.User;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
@@ -51,7 +50,7 @@ public class RegisterInteractor implements RegisterContract.Interactor {
                             updateUserInfo(name, pickedImgUri, currentUser);
                         } else {
                             // If sign in fails, display a message to the user.
-                            listener.onFail(R.string.register_failed);
+                            listener.onFail("Đăng ký thất bại");
                         }
                     }
                 });
@@ -100,9 +99,9 @@ public class RegisterInteractor implements RegisterContract.Interactor {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             FirebaseAuth.getInstance().signOut();
-                            listener.onSuccess(R.string.register_successful);
+                            listener.onSuccess("Đăng ký thành công");
                         } else {
-                            listener.onFail(R.string.register_failed);
+                            listener.onFail("Đăng ký thất bại");
                         }
                     }
                 });

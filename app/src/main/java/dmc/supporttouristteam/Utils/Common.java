@@ -11,8 +11,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Timestamp;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 
@@ -20,6 +22,13 @@ public class Common {
     public static FirebaseAuth FB_AUTH = FirebaseAuth.getInstance();
     public static GroupInfo groupClicked;
     public static FirebaseUser currentUser;
+
+
+    public static String removeAccent(String s) {
+        String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(temp).replaceAll("");
+    }
 
     public static String convertTimeStampToString(long time) {
         Date date = new Date(new Timestamp(time).getTime());
@@ -37,13 +46,13 @@ public class Common {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                 .setMessage(message)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Không, Cảm ơn", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 })
-                .setPositiveButton("Chấp nhận", new DialogInterface.OnClickListener() {
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         requestPermission(activity, permission, permissionRequestCode);
                     }

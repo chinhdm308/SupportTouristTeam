@@ -11,7 +11,7 @@ public interface RegisterContract {
         void showRegisterButton();
         void hideRegisterButton();
         void navigateToLogin();
-        void showMessage(int message);
+        void showMessage(String message);
     }
 
     interface Presenter {
@@ -26,7 +26,7 @@ public interface RegisterContract {
     }
 
     interface OnOperationListener {
-        void onSuccess(int message);
-        void onFail(int message);
+        void onSuccess(String message);
+        void onFail(String message);
     }
 }

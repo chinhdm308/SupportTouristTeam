@@ -11,6 +11,7 @@ public interface ChatsContract {
         void navigateToAddGroupActivity();
         void navigateToSearchActivity();
         void navigationToMessageActivity(int pos);
+        void navigateToFindNearbyPlacesActivity();
     }
 
     interface Presenter {
@@ -19,6 +20,7 @@ public interface ChatsContract {
         void navigateToUserInfoActivity();
         void navigateToAddGroupActivity();
         void navigateToSearchActivity();
+        void navigateToFindNearbyPlacesActivity();
     }
 
     interface Interactor {

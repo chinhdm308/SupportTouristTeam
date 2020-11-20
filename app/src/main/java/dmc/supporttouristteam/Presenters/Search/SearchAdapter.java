@@ -19,9 +19,11 @@ import dmc.supporttouristteam.R;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
     private List<User> userList;
+    private SearchContract.Presenter presenter;
 
-    public SearchAdapter(List<User> userList) {
+    public SearchAdapter(List<User> userList, SearchContract.Presenter presenter) {
         this.userList = userList;
+        this.presenter = presenter;
     }
 
     @NonNull
@@ -54,7 +56,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    presenter.doUserItemClick(userList.get(getAdapterPosition()));
                 }
             });
         }

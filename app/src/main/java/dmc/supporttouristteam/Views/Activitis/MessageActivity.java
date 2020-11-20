@@ -34,7 +34,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private EditText etMessage;
     private RecyclerView recyclerViewMessage;
     private MessageAdapter messageAdapter;
-    private GroupInfo groupInfo;
     private MessagePresenter presenter;
 
     @Override

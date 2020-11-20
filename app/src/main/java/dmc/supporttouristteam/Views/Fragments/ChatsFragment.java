@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Activitis.AddGroupActivity;
+import dmc.supporttouristteam.Views.Activitis.FindNearbyPlacesActivity;
 import dmc.supporttouristteam.Views.Activitis.MessageActivity;
 import dmc.supporttouristteam.Views.Activitis.SearchActivity;
 import dmc.supporttouristteam.Views.Activitis.UserInfoActivity;
@@ -34,7 +36,7 @@ import dmc.supporttouristteam.Views.Activitis.UserInfoActivity;
 public class ChatsFragment extends Fragment implements View.OnClickListener, ChatsContract.View {
     private CircleImageView photo;
     private TextView textName;
-    private Button buttonAddGroup, buttonSearch;
+    private Button buttonAddGroup, buttonSearch, buttonFindPlace;
     private RecyclerView recyclerChats;
     private ChatsAdapter chatsAdapter;
     private List<GroupInfo> groupInfoList;
@@ -47,13 +49,14 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
         init(view);
 
         // load uer info
-        Glide.with(view.getContext()).load(Common.currentUser.getPhotoUrl())
+        Glide.with(view.getContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .placeholder(R.drawable.add_user_male_100).into(photo);
-        textName.setText(Common.currentUser.getDisplayName());
+        textName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         photo.setOnClickListener(this);
         buttonAddGroup.setOnClickListener(this);
         buttonSearch.setOnClickListener(this);
+        buttonFindPlace.setOnClickListener(this);
 
         presenter = new ChatsPresenter(this);
         presenter.doReadChatList();
@@ -64,6 +67,7 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
         textName = view.findViewById(R.id.text_user_name);
         buttonAddGroup = view.findViewById(R.id.button_add_group);
         buttonSearch = view.findViewById(R.id.button_search);
+        buttonFindPlace = view.findViewById(R.id.button_find_place);
 
         recyclerChats = view.findViewById(R.id.recycler_chats);recyclerChats.setHasFixedSize(true);
         recyclerChats.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -92,6 +96,11 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     }
 
     @Override
+    public void navigateToFindNearbyPlacesActivity() {
+        startActivity(new Intent(getContext(), FindNearbyPlacesActivity.class));
+    }
+
+    @Override
     public void navigationToMessageActivity(int pos) {
         Common.groupClicked = groupInfoList.get(pos);
         Intent messageActivity = new Intent(getContext(), MessageActivity.class);
@@ -117,6 +126,9 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
                 break;
             case R.id.button_search:
                 presenter.navigateToSearchActivity();
+                break;
+            case R.id.button_find_place:
+                presenter.navigateToFindNearbyPlacesActivity();
                 break;
         }
     }

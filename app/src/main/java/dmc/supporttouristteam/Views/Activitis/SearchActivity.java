@@ -1,36 +1,35 @@
 package dmc.supporttouristteam.Views.Activitis;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Presenters.Search.SearchAdapter;
+import dmc.supporttouristteam.Presenters.Search.SearchContract;
+import dmc.supporttouristteam.Presenters.Search.SearchPresenter;
 import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SearchContract.View {
     private RecyclerView recyclerSearch;
     private SearchAdapter searchAdapter;
     private EditText editTextSearch;
-    private List<User> userList, tmp;
+    private List<User> userList;
     private DatabaseReference userRef;
+    private SearchPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class SearchActivity extends AppCompatActivity {
 
         init();
 
-        setRecyclerSearch();
+        presenter.doSetRecyclerSearch(userRef);
 
         search();
     }
@@ -55,39 +54,11 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                tmp.clear();
-                for (User user : userList) {
-                    if (user.getDisplayName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
-                        tmp.add(user);
-                    }
-                }
-                searchAdapter = new SearchAdapter(tmp);
-                recyclerSearch.setAdapter(searchAdapter);
+                presenter.doSearchUser(charSequence.toString(), userList);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
-            }
-        });
-    }
-
-    private void setRecyclerSearch() {
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot i : snapshot.getChildren()) {
-                    User user = i.getValue(User.class);
-                    if (!user.getId().equals(Common.currentUser.getUid())) {
-                        userList.add(user);
-                    }
-                }
-                searchAdapter = new SearchAdapter(userList);
-                recyclerSearch.setAdapter(searchAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
@@ -101,8 +72,29 @@ public class SearchActivity extends AppCompatActivity {
         recyclerSearch.setLayoutManager(new LinearLayoutManager(this));
 
         userList = new ArrayList<>();
-        tmp = new ArrayList<>();
+
+        presenter = new SearchPresenter(this);
 
         userRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
+    }
+
+    @Override
+    public void setRecyclerSearch(List<User> userList) {
+        this.userList = userList;
+        searchAdapter = new SearchAdapter(userList, presenter);
+        recyclerSearch.setAdapter(searchAdapter);
+    }
+
+    @Override
+    public void setRecyclerSearchAfter(List<User> tmp) {
+        searchAdapter = new SearchAdapter(tmp, presenter);
+        recyclerSearch.setAdapter(searchAdapter);
+    }
+
+    @Override
+    public void navigationToUserInfoActivity(User user) {
+        Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+        intent.putExtra(Config.EXTRA_USER, user);
+        startActivity(intent);
     }
 }

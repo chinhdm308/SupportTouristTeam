@@ -15,4 +15,6 @@ public class Config {
     public static final int MSG_TYPE_RIGHT = 1;
 
     public static final int MY_REQUEST_CODE = 1;
+
+    public static final String TAG = "DEBUG_APP_DMC";
 }

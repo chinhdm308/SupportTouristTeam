@@ -8,17 +8,20 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class LoginPresenter implements LoginContract.Presenter, LoginContract.OnOperationListener {
     private LoginContract.View view;
     private LoginInteractor interactor;
+    private Context context;
+    private Activity activity;
 
-    public LoginPresenter(LoginContract.View view) {
+    public LoginPresenter(LoginContract.View view, Context context, Activity activity) {
         this.view = view;
         this.interactor = new LoginInteractor(this);
+        this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -27,35 +30,29 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.On
     }
 
     @Override
-    public void checkAndRequestForPermission(Context context, Activity activity) {
+    public void checkAndRequestForPermission(String email, String password) {
         int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // show explanation
-                Common.showExplanation(context, activity, "", "Bạn cần cấp quyền cho ứng dụng",
+                Common.showExplanation(context, activity, "", "Bạn cần cấp quyền cho ứng dụng để có trải nghiệm tốt hơn",
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Config.MY_REQUEST_CODE);
             } else {
                 Common.requestPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, Config.MY_REQUEST_CODE);
             }
         } else {
-
+            if (email.isEmpty()) {
+                view.showMessage("Email trống");
+            } else if (password.isEmpty()) {
+                view.showMessage("Mật khẩu trống");
+            } else {
+                view.showProgress();
+                view.hideLoginButton();
+                interactor.login(email, password);
+            }
         }
-    }
-
-    @Override
-    public void onEmailError() {
-        view.hideProgress();
-        view.showLoginButton();
-        view.showMessage(R.string.email_error);
-    }
-
-    @Override
-    public void onPasswordError() {
-        view.hideProgress();
-        view.showLoginButton();
-        view.showMessage(R.string.password_error);
     }
 
     @Override
@@ -67,13 +64,11 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.On
     public void onFail() {
         view.hideProgress();
         view.showLoginButton();
-        view.showMessage(R.string.login_failed);
+        view.showMessage("Đăng nhập thất bại");
     }
 
     @Override
     public void validateCredentials(String email, String password) {
-        view.showProgress();
-        view.hideLoginButton();
-        interactor.login(email, password);
+        checkAndRequestForPermission(email, password);
     }
 }

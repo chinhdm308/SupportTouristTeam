@@ -1,7 +1,5 @@
 package dmc.supporttouristteam.Presenters.Login;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,27 +18,16 @@ public class LoginInteractor implements LoginContract.Interactor {
 
     @Override
     public void login(String email, String password) {
-        boolean error = false;
-        if (TextUtils.isEmpty(email)) {
-            listener.onEmailError();
-            error = true;
-        }
-        if (TextUtils.isEmpty(password)) {
-            listener.onPasswordError();
-            error = true;
-        }
-        if (!error) {
-            Common.FB_AUTH.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                listener.onSuccess();
-                            } else {
-                                listener.onFail();
-                            }
+        Common.FB_AUTH.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            listener.onSuccess();
+                        } else {
+                            listener.onFail();
                         }
-                    });
-        }
+                    }
+                });
     }
 }

@@ -12,4 +12,7 @@
     <string name="confirm_pass_incorrect">Xác nhận lại mật khẩu</string>
     <string name="required_permission">Vui lòng xác nhận các quyền</string>
     <string name="title_activity_tracking">Map</string>
+    <string name="title_activity_find_nearby_places">Map</string>
+    <string name="notification_text">Tracking, tap to cancel</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

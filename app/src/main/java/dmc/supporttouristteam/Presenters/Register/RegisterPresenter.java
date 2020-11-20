@@ -9,7 +9,6 @@ import android.net.Uri;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
@@ -34,7 +33,7 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 // show explanation
-                Common.showExplanation(context, activity, "", "Bạn cần cấp quyền cho ứng dụng",
+                Common.showExplanation(context, activity, "", "Bạn cần cấp quyền cho ứng dụng để có thể đăng ký tài khoản",
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Config.MY_REQUEST_CODE);
             } else {
@@ -46,7 +45,7 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
     }
 
     @Override
-    public void onSuccess(int message) {
+    public void onSuccess(String message) {
         view.showRegisterButton();
         view.hideProgress();
         view.showMessage(message);
@@ -54,7 +53,7 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
     }
 
     @Override
-    public void onFail(int message) {
+    public void onFail(String message) {
         view.showRegisterButton();
         view.hideProgress();
         view.showMessage(message);
@@ -65,17 +64,17 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
         view.hideRegisterButton();
         view.showProgress();
         if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            onFail(R.string.fields_empty);
+            onFail("Thông tin còn thiếu");
 
         } else {
             if (confirmPassword.equals(password)) {
                 if (pickedImgUri != null) {
                     interactor.register(name, email, password, pickedImgUri);
                 } else {
-                    onFail(R.string.image_picked_empty);
+                    onFail("Vui lòng chọn ảnh đại diện");
                 }
             } else {
-                onFail(R.string.confirm_pass_incorrect);
+                onFail("Xác nhận lại mật khẩu");
             }
         }
     }

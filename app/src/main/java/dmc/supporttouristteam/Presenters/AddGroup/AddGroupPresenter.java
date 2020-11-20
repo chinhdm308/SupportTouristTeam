@@ -2,13 +2,12 @@ package dmc.supporttouristteam.Presenters.AddGroup;
 
 import com.google.firebase.database.DatabaseReference;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
+import dmc.supporttouristteam.Utils.Common;
 
 public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupContract.OnOperationListener {
     private AddGroupContract.View view;
@@ -24,17 +23,11 @@ public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupCo
         interactor.readParticipants(reference);
     }
 
-    private String removeAccent(String s) {
-        String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(temp).replaceAll("");
-    }
-
     @Override
     public void doSearch(String s, List<User> participantList) {
         List<User> temp = new ArrayList<>();
         for (User user : participantList) {
-            if (removeAccent(user.getDisplayName().toLowerCase()).contains(removeAccent(s.toLowerCase()))) {
+            if (Common.removeAccent(user.getDisplayName().toLowerCase()).contains(Common.removeAccent(s.toLowerCase()))) {
                 temp.add(user);
             }
         }

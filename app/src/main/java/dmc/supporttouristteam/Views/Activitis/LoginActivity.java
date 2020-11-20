@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         buttonLogin.setOnClickListener(this);
         textCreateAccount.setOnClickListener(this);
 
-        presenter = new LoginPresenter(this);
+        presenter = new LoginPresenter(this, LoginActivity.this, LoginActivity.this);
     }
 
     protected void onStart() {
@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void showMessage(int message) {
-        Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show();
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

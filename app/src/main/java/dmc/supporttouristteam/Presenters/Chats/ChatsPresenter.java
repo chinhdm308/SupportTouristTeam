@@ -34,6 +34,11 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
     }
 
     @Override
+    public void navigateToFindNearbyPlacesActivity() {
+        view.navigateToFindNearbyPlacesActivity();
+    }
+
+    @Override
     public void onReadChatList(List<GroupInfo> groupInfoList) {
         view.setRecyclerChats(groupInfoList);
     }

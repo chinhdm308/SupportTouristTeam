@@ -13,10 +13,11 @@ import com.bumptech.glide.Glide;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.Service.TrackerService;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
-public class UserInfoActivity extends AppCompatActivity {
+public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     private CircleImageView userPhoto;
     private TextView textEmail, textUsername;
     private Button buttonLogout;
@@ -33,14 +34,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         loadUserInfo();
 
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Common.FB_AUTH.signOut();
-                startActivity(new Intent(UserInfoActivity.this, LoginActivity.class));
-                finish();
-            }
-        });
+        buttonLogout.setOnClickListener(this);
     }
 
     private void loadUserInfo() {
@@ -74,5 +68,15 @@ public class UserInfoActivity extends AppCompatActivity {
         onBackPressed();
         finish();
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_logout) {
+            stopService(new Intent(getApplicationContext(), TrackerService.class));
+            Common.FB_AUTH.signOut();
+            startActivity(new Intent(UserInfoActivity.this, LoginActivity.class));
+            finish();
+        }
     }
 }

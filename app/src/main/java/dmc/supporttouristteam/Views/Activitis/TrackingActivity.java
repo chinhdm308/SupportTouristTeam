@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -86,19 +87,26 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
+        mMap.clear();
         LatLng curUser = null;
         for (DataSnapshot data : snapshot.getChildren()) {
             if (data.getValue() != null) {
+                String uid = data.getKey();
                 MyLocation location = data.getValue(MyLocation.class);
-                if (groupInfo.getChatList().contains(location.getId())) {
-                    if (location.getId().equals(Common.currentUser.getUid())) {
+                if (groupInfo.getChatList().contains(uid)) {
+                    if (uid.equals(Common.currentUser.getUid())) {
+                        // Add Marker
                         curUser = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(curUser)
+                                .title(uid).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .snippet(Common.convertTimeStampToString(location.getTime())));
+                    } else {
+                        // Add Marker
+                        LatLng userMarker = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(userMarker)
+                                .title(uid).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .snippet(Common.convertTimeStampToString(location.getTime())));
                     }
-                    // Add Marker
-                    LatLng userMarker = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(userMarker)
-                            .title("Hehe")
-                            .snippet(Common.convertTimeStampToString(location.getTime())));
                 }
             }
         }
