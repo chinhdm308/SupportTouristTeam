@@ -21,7 +21,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import dmc.supporttouristteam.Models.User;
-import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class RegisterInteractor implements RegisterContract.Interactor {
@@ -40,13 +39,13 @@ public class RegisterInteractor implements RegisterContract.Interactor {
     @Override
     public void register(String name, String email, String password, Uri pickedImgUri) {
         // this method create user account with specific email and password
-        Common.FB_AUTH.createUserWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser currentUser = Common.FB_AUTH.getCurrentUser();
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                             updateUserInfo(name, pickedImgUri, currentUser);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -58,7 +57,7 @@ public class RegisterInteractor implements RegisterContract.Interactor {
 
     private void updateUserInfo(final String name, final Uri pickedImgUri, final FirebaseUser currentUser) {
         // need to upload user photo to firebase storage and get url
-        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child(Config.RF_PHOTOS);
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child(Config.RF_USER_PHOTOS);
         final StorageReference imageFilePath = mStorage.child(pickedImgUri.getLastPathSegment());
         imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

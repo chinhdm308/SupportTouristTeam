@@ -2,6 +2,7 @@ package dmc.supporttouristteam.Presenters.Chats;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,11 +36,12 @@ public class ChatsInteractor implements ChatsContract.Interactor {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.getValue() != null) {
                         GroupInfo groupInfo = snapshot.getValue(GroupInfo.class);
-                        if (groupInfo.getChatList().contains(Common.currentUser.getUid())) {
+                        if (groupInfo.getChatList().contains(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                             groupInfoList.add(groupInfo);
                         }
                     }
                 }
+                Common.groupInfoList = groupInfoList;
                 listener.onReadChatList(groupInfoList);
             }
 

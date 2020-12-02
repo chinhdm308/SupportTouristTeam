@@ -19,11 +19,6 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
     }
 
     @Override
-    public void navigateToUserInfoActivity() {
-        view.navigateToUserInfoActivity();
-    }
-
-    @Override
     public void navigateToAddGroupActivity() {
         view.navigateToAddGroupActivity();
     }
@@ -34,17 +29,22 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
     }
 
     @Override
-    public void navigateToFindNearbyPlacesActivity() {
-        view.navigateToFindNearbyPlacesActivity();
-    }
-
-    @Override
     public void onReadChatList(List<GroupInfo> groupInfoList) {
+        if (groupInfoList.size() > 0) {
+            view.showRecyclerChats();
+        } else {
+            view.hideRecyclerChats();
+        }
         view.setRecyclerChats(groupInfoList);
     }
 
     @Override
     public void doChatsItemClick(int pos) {
         view.navigationToMessageActivity(pos);
+    }
+
+    @Override
+    public void doShowLocation(int pos) {
+        view.navigationToTrackingActivity(pos);
     }
 }

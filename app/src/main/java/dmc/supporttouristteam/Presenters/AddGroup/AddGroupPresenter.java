@@ -40,7 +40,7 @@ public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupCo
             view.showMessage("Chưa có thành viên nào");
         }
         if (selectedParticipantList.size() == 1) {
-            interactor.createGroup("", selectedParticipantList);
+            interactor.createGroup("", selectedParticipantList, 2);
         }
         if (selectedParticipantList.size() > 1) {
             view.showCreateGroupBottomSheet();

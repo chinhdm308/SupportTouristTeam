@@ -13,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/rounded"
-        android:elevation="18dp"
-        android:padding="8dp"
-        android:outlineProvider="bounds"
+        android:background="@drawable/bg_navigation_buttom"
+        android:padding="5dp"
+        android:elevation="5dp"
         app:cnb_menuResource="@menu/bottom_menu" />
 </RelativeLayout>

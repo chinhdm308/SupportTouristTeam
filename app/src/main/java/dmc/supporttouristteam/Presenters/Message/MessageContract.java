@@ -3,7 +3,6 @@ package dmc.supporttouristteam.Presenters.Message;
 import java.util.List;
 
 import dmc.supporttouristteam.Models.Chat;
-import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
 
 public interface MessageContract {
@@ -15,7 +14,7 @@ public interface MessageContract {
 
     interface Presenter {
         void doSendMessage(String message);
-        void doLoadDataGroupInfo(GroupInfo groupInfo);
+        void doLoadDataGroupInfo();
         void doReadDataMessages();
     }
 

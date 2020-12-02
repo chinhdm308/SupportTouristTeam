@@ -28,15 +28,14 @@ import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Activitis.AddGroupActivity;
-import dmc.supporttouristteam.Views.Activitis.FindNearbyPlacesActivity;
 import dmc.supporttouristteam.Views.Activitis.MessageActivity;
 import dmc.supporttouristteam.Views.Activitis.SearchActivity;
-import dmc.supporttouristteam.Views.Activitis.UserInfoActivity;
+import dmc.supporttouristteam.Views.Activitis.TrackingActivity;
 
 public class ChatsFragment extends Fragment implements View.OnClickListener, ChatsContract.View {
     private CircleImageView photo;
-    private TextView textName;
-    private Button buttonAddGroup, buttonSearch, buttonFindPlace;
+    private TextView textName, textShow;
+    private Button buttonAddGroup, buttonSearch;
     private RecyclerView recyclerChats;
     private ChatsAdapter chatsAdapter;
     private List<GroupInfo> groupInfoList;
@@ -53,11 +52,6 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
                 .placeholder(R.drawable.add_user_male_100).into(photo);
         textName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
-        photo.setOnClickListener(this);
-        buttonAddGroup.setOnClickListener(this);
-        buttonSearch.setOnClickListener(this);
-        buttonFindPlace.setOnClickListener(this);
-
         presenter = new ChatsPresenter(this);
         presenter.doReadChatList();
     }
@@ -67,7 +61,10 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
         textName = view.findViewById(R.id.text_user_name);
         buttonAddGroup = view.findViewById(R.id.button_add_group);
         buttonSearch = view.findViewById(R.id.button_search);
-        buttonFindPlace = view.findViewById(R.id.button_find_place);
+        textShow = view.findViewById(R.id.text_show);
+
+        buttonAddGroup.setOnClickListener(this);
+        buttonSearch.setOnClickListener(this);
 
         recyclerChats = view.findViewById(R.id.recycler_chats);recyclerChats.setHasFixedSize(true);
         recyclerChats.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -81,11 +78,6 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     }
 
     @Override
-    public void navigateToUserInfoActivity() {
-        startActivity(new Intent(getContext(), UserInfoActivity.class));
-    }
-
-    @Override
     public void navigateToAddGroupActivity() {
         startActivity(new Intent(getContext(), AddGroupActivity.class));
     }
@@ -96,16 +88,30 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     }
 
     @Override
-    public void navigateToFindNearbyPlacesActivity() {
-        startActivity(new Intent(getContext(), FindNearbyPlacesActivity.class));
-    }
-
-    @Override
     public void navigationToMessageActivity(int pos) {
         Common.groupClicked = groupInfoList.get(pos);
         Intent messageActivity = new Intent(getContext(), MessageActivity.class);
-        messageActivity.putExtra(Config.EXTRA_GROUP_INFO, groupInfoList.get(pos));
         startActivity(messageActivity);
+    }
+
+    @Override
+    public void navigationToTrackingActivity(int pos) {
+        Common.groupClicked = groupInfoList.get(pos);
+        Intent trackingActivity = new Intent(getContext(), TrackingActivity.class);
+        trackingActivity.putExtra(Config.EXTRA_GROUP_INFO, Common.groupClicked);
+        startActivity(trackingActivity);
+    }
+
+    @Override
+    public void showRecyclerChats() {
+        recyclerChats.setVisibility(View.VISIBLE);
+        textShow.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideRecyclerChats() {
+        recyclerChats.setVisibility(View.INVISIBLE);
+        textShow.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -118,17 +124,11 @@ public class ChatsFragment extends Fragment implements View.OnClickListener, Cha
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.image_user_photo:
-                presenter.navigateToUserInfoActivity();
-                break;
             case R.id.button_add_group:
                 presenter.navigateToAddGroupActivity();
                 break;
             case R.id.button_search:
                 presenter.navigateToSearchActivity();
-                break;
-            case R.id.button_find_place:
-                presenter.navigateToFindNearbyPlacesActivity();
                 break;
         }
     }

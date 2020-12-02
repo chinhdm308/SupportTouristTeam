@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
     android:orientation="vertical"
     tools:context=".Views.Activitis.UserInfoActivity">
 
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:backgroundTint="@color/purple_700"
+        android:elevation="5dp"
         app:cardCornerRadius="20dp">
 
         <LinearLayout
@@ -33,11 +34,11 @@
 
     <LinearLayout
         android:id="@+id/linear"
-        android:layout_below="@id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
+        android:layout_below="@id/cardview"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical">
 
         <TextView
@@ -50,7 +51,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txt_name"
+            android:id="@+id/text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -67,17 +68,35 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txt_email"
+            android:id="@+id/text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="dmc@gmail.com"
             android:textSize="18sp" />
     </LinearLayout>
-    <Button
-        android:layout_alignParentBottom="true"
-        android:id="@+id/button_logout"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đăng xuất" />
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:layout_margin="10dp"
+            android:id="@+id/button_add_friend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Thêm bạn" />
+
+        <Button
+            android:layout_margin="10dp"
+            android:id="@+id/button_chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nhắn tin" />
+    </LinearLayout>
 </RelativeLayout>

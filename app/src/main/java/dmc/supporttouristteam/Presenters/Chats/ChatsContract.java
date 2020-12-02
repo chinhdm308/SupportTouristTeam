@@ -7,20 +7,20 @@ import dmc.supporttouristteam.Models.GroupInfo;
 public interface ChatsContract {
     interface View {
         void setRecyclerChats(List<GroupInfo> groupInfoList);
-        void navigateToUserInfoActivity();
         void navigateToAddGroupActivity();
         void navigateToSearchActivity();
         void navigationToMessageActivity(int pos);
-        void navigateToFindNearbyPlacesActivity();
+        void showRecyclerChats();
+        void hideRecyclerChats();
+        void navigationToTrackingActivity(int pos);
     }
 
     interface Presenter {
         void doReadChatList();
         void doChatsItemClick(int pos);
-        void navigateToUserInfoActivity();
         void navigateToAddGroupActivity();
         void navigateToSearchActivity();
-        void navigateToFindNearbyPlacesActivity();
+        void doShowLocation(int pos);
     }
 
     interface Interactor {

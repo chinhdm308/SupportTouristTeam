@@ -1,18 +1,29 @@
 package dmc.supporttouristteam.Views.Activitis;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -26,15 +37,19 @@ import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
-public class MessageActivity extends AppCompatActivity implements View.OnClickListener, MessageContract.View {
+public class MessageActivity extends AppCompatActivity implements View.OnClickListener, MessageContract.View, ChildEventListener {
     private TextView textGroupName;
     private ImageView buttonBack, buttonSend;
-    private Button buttonShowLocation;
+    private Button buttonShowLocation, buttonShowInfo;
     private CircleImageView imageGroup;
     private EditText etMessage;
+
     private RecyclerView recyclerViewMessage;
     private MessageAdapter messageAdapter;
+
     private MessagePresenter presenter;
+
+    private DatabaseReference groupsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +60,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
         init();
 
-        presenter.doLoadDataGroupInfo(getDataToIntent());
+        presenter.doLoadDataGroupInfo();
         presenter.doReadDataMessages();
-
-        buttonBack.setOnClickListener(this);
-        buttonShowLocation.setOnClickListener(this);
-        buttonSend.setOnClickListener(this);
     }
 
     @Override
@@ -64,6 +75,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         buttonBack = findViewById(R.id.button_back);
         buttonSend = findViewById(R.id.button_send);
         buttonShowLocation = findViewById(R.id.button_show_location);
+        buttonShowInfo = findViewById(R.id.button_show_info);
         imageGroup = findViewById(R.id.image_group);
         etMessage = findViewById(R.id.et_message);
         recyclerViewMessage = findViewById(R.id.recycler_message);
@@ -74,10 +86,14 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         recyclerViewMessage.setLayoutManager(linearLayoutManager);
 
         presenter = new MessagePresenter(this);
-    }
 
-    private GroupInfo getDataToIntent() {
-        return (GroupInfo) getIntent().getSerializableExtra(Config.EXTRA_GROUP_INFO);
+        buttonBack.setOnClickListener(this);
+        buttonShowLocation.setOnClickListener(this);
+        buttonSend.setOnClickListener(this);
+        buttonShowInfo.setOnClickListener(this);
+
+        groupsRef = FirebaseDatabase.getInstance().getReference(Config.RF_GROUPS);
+        groupsRef.addChildEventListener(this);
     }
 
     @Override
@@ -96,6 +112,10 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 presenter.doSendMessage(msg);
                 etMessage.setText("");
                 break;
+            case R.id.button_show_info:
+                Intent intent = new Intent(MessageActivity.this, InfoChatActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -111,5 +131,65 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void setNameGroup(String name) {
         textGroupName.setText(name);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (Common.groupClicked != null)
+            presenter.doLoadDataGroupInfo();
+        else
+            finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(Config.TAG, "onStop");
+        groupsRef.removeEventListener(this);
+    }
+
+    @Override
+    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+    }
+
+    @Override
+    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+    }
+
+    @Override
+    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+        if (snapshot.exists()) {
+            GroupInfo groupInfo = snapshot.getValue(GroupInfo.class);
+
+            if (groupInfo.getId().equals(Common.groupClicked.getId())) {
+
+                AlertDialog alert = new AlertDialog.Builder(MessageActivity.this).create();
+                alert.setMessage("Cuộc trò chuyện này đã bị xóa");
+                alert.setCancelable(false);
+                alert.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Common.groupClicked = null;
+                        finish();
+                    }
+                });
+
+                alert.show();
+            }
+        }
+    }
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+
     }
 }

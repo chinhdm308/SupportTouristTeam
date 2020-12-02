@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +22,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.Models.Chat;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.Utils.Common;
 import dmc.supporttouristteam.Utils.Config;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
@@ -49,7 +49,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Chat chat = mData.get(position);
         holder.showMessage.setText(chat.getMessage());
-        if (!chat.getSender().equals(Common.currentUser.getUid())) {
+        if (!chat.getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             usersRef.child(chat.getSender()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -83,13 +83,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             super(itemView);
             profileImage = itemView.findViewById(R.id.image_user);
             showMessage = itemView.findViewById(R.id.show_message);
-            txtName = itemView.findViewById(R.id.txt_name);
+            txtName = itemView.findViewById(R.id.text_name);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mData.get(position).getSender().equals(Common.currentUser.getUid())) {
+        if (mData.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             return Config.MSG_TYPE_RIGHT;
         } else {
             return Config.MSG_TYPE_LEFT;

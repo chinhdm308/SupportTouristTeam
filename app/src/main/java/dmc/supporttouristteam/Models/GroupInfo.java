@@ -10,19 +10,27 @@ public class GroupInfo implements Serializable {
     private String id;
     private String name;
     private String image;
-    private int numberOfPeople;
     private List<String> chatList;
+    private int type; // 1: group 2: couple
 
     public GroupInfo() {
         this.chatList = new ArrayList<>();
     }
 
-    public GroupInfo(String id, String name, String image, int numberOfPeople) {
+    public GroupInfo(String id, String name, String image, int type) {
         this.id = id;
         this.name = name;
         this.image = image;
-        this.numberOfPeople = numberOfPeople;
+        this.type = type;
         this.chatList = new ArrayList<>();
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getId() {
@@ -47,14 +55,6 @@ public class GroupInfo implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public int getNumberOfPeople() {
-        return numberOfPeople;
-    }
-
-    public void setNumberOfPeople(int numberOfPeople) {
-        this.numberOfPeople = numberOfPeople;
     }
 
     public List<String> getChatList() {

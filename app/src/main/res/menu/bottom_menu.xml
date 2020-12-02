@@ -3,12 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_chats"
-        android:icon="@drawable/ic_baseline_chat_24"
-        android:title="Chats"
+        android:icon="@drawable/ic_chat"
+        android:title="Trò chuyện"
         app:cnb_iconColor="@color/purple_700" />
     <item
-        android:id="@+id/menu_people"
-        android:icon="@drawable/ic_baseline_people_24"
-        android:title="People"
-        app:cnb_iconColor="@color/purple_700" />
+        android:id="@+id/menu_love_places"
+        android:icon="@drawable/ic_favorite"
+        android:title="Địa điểm"
+        app:cnb_iconColor="#E91707" />
+    <item
+        android:id="@+id/menu_friends"
+        android:icon="@drawable/ic_people"
+        android:title="Bạn bè"
+        app:cnb_iconColor="#FF9800" />
+    <item
+        android:id="@+id/menu_account"
+        android:icon="@drawable/ic_person"
+        android:title="Tài khoản"
+        app:cnb_iconColor="#9A07B1" />
 </menu>

@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.Api;
+package dmc.supporttouristteam.Models;
 
 public class Place {
     double lat;

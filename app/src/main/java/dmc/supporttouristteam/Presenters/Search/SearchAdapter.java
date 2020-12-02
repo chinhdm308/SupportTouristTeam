@@ -3,6 +3,7 @@ package dmc.supporttouristteam.Presenters.Search;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         User user = userList.get(position);
         Glide.with(holder.itemView.getContext()).load(user.getProfileImg()).into(holder.photo);
         holder.name.setText(user.getDisplayName());
+        holder.button.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -49,10 +51,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     public class SearchViewHolder extends RecyclerView.ViewHolder {
         CircleImageView photo;
         TextView name;
+        Button button;
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             photo = itemView.findViewById(R.id.item_chats_photo);
             name = itemView.findViewById(R.id.item_chats_name);
+            button = itemView.findViewById(R.id.item_chats_button_show_location);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -5,8 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-
-import dmc.supporttouristteam.Utils.Common;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginInteractor implements LoginContract.Interactor {
 
@@ -18,7 +17,7 @@ public class LoginInteractor implements LoginContract.Interactor {
 
     @Override
     public void login(String email, String password) {
-        Common.FB_AUTH.signInWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

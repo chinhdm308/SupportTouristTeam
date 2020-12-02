@@ -1,9 +1,10 @@
 package dmc.supporttouristteam.Presenters.Message;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 import dmc.supporttouristteam.Models.Chat;
-import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.User;
 import dmc.supporttouristteam.Utils.Common;
 
@@ -20,29 +21,29 @@ public class MessagePresenter implements MessageContract.Presenter, MessageContr
     @Override
     public void doSendMessage(String message) {
         if (!message.isEmpty()) {
-            interactor.sendMessage(Common.currentUser.getUid(), "", message);
+            interactor.sendMessage(FirebaseAuth.getInstance().getCurrentUser().getUid(), "", message);
         }
     }
 
     @Override
-    public void doLoadDataGroupInfo(GroupInfo groupInfo) {
+    public void doLoadDataGroupInfo() {
         String uid;
-        if (groupInfo != null) {
-            if (groupInfo.getNumberOfPeople() == 2) {
-                List<String> chatList = groupInfo.getChatList();
-                if (!chatList.get(0).equals(Common.currentUser.getUid())) {
+        if (Common.groupClicked != null) {
+            if (Common.groupClicked.getType() == 2) {
+                List<String> chatList = Common.groupClicked.getChatList();
+                if (!chatList.get(0).equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     uid = chatList.get(0);
                 } else {
                     uid = chatList.get(1);
                 }
                 interactor.loadDataGroupInfo(uid);
             } else {
-                if (groupInfo.getImage().equals("default")) {
+                if (Common.groupClicked.getImage().equals("default")) {
                     view.setImageGroup(null);
                 } else {
-                    view.setImageGroup(groupInfo.getImage());
+                    view.setImageGroup(Common.groupClicked.getImage());
                 }
-                view.setNameGroup(groupInfo.getName());
+                view.setNameGroup(Common.groupClicked.getName());
             }
         }
     }

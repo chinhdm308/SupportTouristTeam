@@ -30,7 +30,7 @@ public interface AddGroupContract {
 
     interface Interactor {
         void readParticipants(DatabaseReference reference);
-        void createGroup(String nameGroup, List<User> selectedParticipantList);
+        void createGroup(String nameGroup, List<User> selectedParticipantList, int type);
     }
 
     interface OnOperationListener {

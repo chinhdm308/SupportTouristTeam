@@ -1,6 +1,7 @@
 package dmc.supporttouristteam.Views.Activitis;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -22,13 +23,17 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Service.TrackerService;
 import dmc.supporttouristteam.Utils.Config;
+import dmc.supporttouristteam.Views.Fragments.AccountFragment;
 import dmc.supporttouristteam.Views.Fragments.ChatsFragment;
-import dmc.supporttouristteam.Views.Fragments.PeopleFragment;
+import dmc.supporttouristteam.Views.Fragments.FriendsFragment;
+import dmc.supporttouristteam.Views.Fragments.LovePlacesFragment;
 
 public class MainActivity extends AppCompatActivity implements ChipNavigationBar.OnItemSelectedListener {
 
@@ -42,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().hide();
-
         init();
 
         // Update location
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
         if (savedInstanceState == null) {
             navigationBar.setItemSelected(R.id.menu_chats, true);
         }
+
+//        FirebaseDatabase.getInstance().getReference(Config.RF_GROUPS).removeValue();
+//        FirebaseDatabase.getInstance().getReference(Config.RF_CHATS).removeValue();
     }
 
     private void checkGPS() {
@@ -73,8 +79,7 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
-            grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Start the service when the permission is granted
@@ -91,10 +96,20 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
     @Override
     public void onItemSelected(int i) {
         if (i == R.id.menu_chats) {
+            getSupportActionBar().setTitle("Trò chuyện");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChatsFragment()).commit();
         }
-        if (i == R.id.menu_people) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PeopleFragment()).commit();
+        if (i == R.id.menu_friends) {
+            getSupportActionBar().setTitle("Bạn bè");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FriendsFragment()).commit();
+        }
+        if (i == R.id.menu_account) {
+            getSupportActionBar().setTitle("Thông tin cá nhân");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
+        }
+        if (i == R.id.menu_love_places) {
+            getSupportActionBar().setTitle("Địa điểm yêu thích");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LovePlacesFragment()).commit();
         }
     }
 
@@ -106,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(request);
-//        builder.setAlwaysShow(true); // this is the key ingredient
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
 
@@ -145,6 +159,34 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
             if (resultCode == RESULT_CANCELED) {
                 Log.d(Config.TAG, "Location not enabled, user cancelled.");
                 finish();
+            }
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                AccountFragment accountFragment = (AccountFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                accountFragment.onSetAvatarTemp(result.getUri());
+                MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setTitle("Ảnh đại diện")
+                        .setMessage("Bạn có muốn thay đổi ảnh đại diện không ?")
+                        .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                accountFragment.onSelectedImage(null);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                accountFragment.onSelectedImage(result.getUri());
+                            }
+                        })
+                        .setCancelable(false);
+                dialogBuilder.show();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         }
     }

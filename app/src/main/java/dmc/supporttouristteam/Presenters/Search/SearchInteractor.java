@@ -2,6 +2,7 @@ package dmc.supporttouristteam.Presenters.Search;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dmc.supporttouristteam.Models.User;
-import dmc.supporttouristteam.Utils.Common;
 
 public class SearchInteractor implements SearchContract.Interactor {
 
@@ -30,7 +30,7 @@ public class SearchInteractor implements SearchContract.Interactor {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     User user = i.getValue(User.class);
-                    if (!user.getId().equals(Common.currentUser.getUid())) {
+                    if (!user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                         list.add(user);
                     }
                 }

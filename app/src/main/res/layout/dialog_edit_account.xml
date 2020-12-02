@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_request_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f2f2f2"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Chỉnh sửa"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:padding="8dp"
+        android:id="@+id/etextInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Nhập thông tin..." />
+</LinearLayout>

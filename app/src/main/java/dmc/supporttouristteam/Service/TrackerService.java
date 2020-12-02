@@ -121,7 +121,7 @@ public class TrackerService extends Service {
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Config.RF_PUBLIC_LOCATION);
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-                            Log.d(Config.TAG, "location update: " + location);
+//                            Log.d(Config.TAG, "location update: " + location);
                             ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(location);
                         }
                     }

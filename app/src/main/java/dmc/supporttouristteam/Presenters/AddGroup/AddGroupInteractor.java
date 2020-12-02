@@ -3,6 +3,8 @@ package dmc.supporttouristteam.Presenters.AddGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,9 +22,13 @@ import dmc.supporttouristteam.Utils.Config;
 public class AddGroupInteractor implements AddGroupContract.Interactor {
     private AddGroupContract.OnOperationListener listener;
     private List<User> participantsList;
+    private FirebaseUser currentUser;
+    private DatabaseReference groupsRef;
 
     public AddGroupInteractor(AddGroupContract.OnOperationListener listener) {
         this.listener = listener;
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        groupsRef = FirebaseDatabase.getInstance().getReference().child(Config.RF_GROUPS);
     }
 
     @Override
@@ -33,7 +39,7 @@ public class AddGroupInteractor implements AddGroupContract.Interactor {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.getChildren()) {
                     User user = i.getValue(User.class);
-                    if (!user.getId().equals(Common.currentUser.getUid())) {
+                    if (!user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                         participantsList.add(user);
                     }
                 }
@@ -48,23 +54,48 @@ public class AddGroupInteractor implements AddGroupContract.Interactor {
     }
 
     @Override
-    public void createGroup(String nameGroup, List<User> selectedParticipantList) {
+    public void createGroup(String nameGroup, List<User> selectedParticipantList, int type) {
         List<String> chatList = new ArrayList<>();
-        chatList.add(Common.currentUser.getUid());
+        chatList.add(currentUser.getUid());
         for (User i : selectedParticipantList) {
             chatList.add(i.getId());
         }
-        final GroupInfo groupInfo = new GroupInfo("", nameGroup, "default", chatList.size());
+        final GroupInfo groupInfo = new GroupInfo("", nameGroup, "default", type);
         groupInfo.setChatList(chatList);
-        DatabaseReference referenceGroupList = FirebaseDatabase.getInstance().getReference();
-        referenceGroupList.child(Config.RF_GROUPS).push().setValue(groupInfo, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                String key = ref.getKey();
-                ref.child("id").setValue(key);
-                listener.onSuccess(groupInfo);
+
+        if (type == 2) {
+            boolean check = false;
+            for (GroupInfo i : Common.groupInfoList) {
+                if (i.getType() == 2 && i.getChatList().containsAll(chatList)) {
+                    check = true;
+                    listener.onSuccess(i);
+                    return;
+                }
             }
-        });
+            if (!check) {
+                groupsRef.push().setValue(groupInfo, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                        String key = ref.getKey();
+                        ref.child("id").setValue(key);
+                        groupInfo.setId(key);
+                        listener.onSuccess(groupInfo);
+                    }
+                });
+            }
+        }
+
+        if (type == 1) {
+            groupsRef.push().setValue(groupInfo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                    String key = ref.getKey();
+                    ref.child("id").setValue(key);
+                    groupInfo.setId(key);
+                    listener.onSuccess(groupInfo);
+                }
+            });
+        }
     }
 
 }

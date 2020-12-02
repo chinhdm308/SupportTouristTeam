@@ -20,12 +20,15 @@ public class MessageInteractor implements MessageContract.Interactor {
 
     private DatabaseReference chatsRef, usersRef;
     private MessageContract.OnOperationListener listener;
+    private List<Chat> chatList;
 
     public MessageInteractor(MessageContract.OnOperationListener listener) {
         this.listener = listener;
 
         this.chatsRef = FirebaseDatabase.getInstance().getReference(Config.RF_CHATS);
         this.usersRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
+
+        chatList = new ArrayList<>();
     }
 
     @Override
@@ -52,16 +55,21 @@ public class MessageInteractor implements MessageContract.Interactor {
 
     @Override
     public void readDataMessages() {
-        List<Chat> chatList = new ArrayList<>();
+//        Log.d(Config.TAG, Common.groupClicked.getId());
+
         chatsRef.child(Common.groupClicked.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chatList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chat chat = snapshot.getValue(Chat.class);
-                    chatList.add(chat);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Chat chat = snapshot.getValue(Chat.class);
+                        chatList.add(chat);
+                    }
+                    listener.onSuccessDataMessage(chatList);
+                } else {
+                    listener.onSuccessDataMessage(chatList);
                 }
-                listener.onSuccessDataMessage(chatList);
             }
 
             @Override

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,15 +56,16 @@ public class CreateGroupBottomSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 if (etGroupName.getText().toString().isEmpty()) {
-                    StringBuilder name = new StringBuilder();
-                    for (User i : selectedParticipantList) {
-                        String[] tmp = i.getDisplayName().split(" ");
-                        name.append(tmp[tmp.length - 1] + ",");
-                    }
-                    name.deleteCharAt(name.length() - 1);
-                    presenter.getInteractor().createGroup(name.toString(), selectedParticipantList);
+                    Toast.makeText(getContext(), "Tên nhóm trống", Toast.LENGTH_SHORT).show();
+//                    StringBuilder name = new StringBuilder();
+//                    for (User i : selectedParticipantList) {
+//                        String[] tmp = i.getDisplayName().split(" ");
+//                        name.append(tmp[tmp.length - 1] + ",");
+//                    }
+//                    name.deleteCharAt(name.length() - 1);
+//                    presenter.getInteractor().createGroup(name.toString(), selectedParticipantList, 1);
                 } else {
-                    presenter.getInteractor().createGroup(etGroupName.getText().toString(), selectedParticipantList);
+                    presenter.getInteractor().createGroup(etGroupName.getText().toString(), selectedParticipantList, 1);
                 }
             }
         });
