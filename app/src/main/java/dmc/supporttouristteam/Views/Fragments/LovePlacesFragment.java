@@ -1,6 +1,9 @@
 package dmc.supporttouristteam.Views.Fragments;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +14,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,15 +32,17 @@ import java.util.List;
 
 import dmc.supporttouristteam.Models.LovePlace;
 import dmc.supporttouristteam.Presenters.LovePlaces.LovePlacesAdapter;
+import dmc.supporttouristteam.Presenters.LovePlaces.LovePlacesContract;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.Utils.Config;
 import dmc.supporttouristteam.Views.Activitis.FindNearbyPlacesActivity;
 
-public class LovePlacesFragment extends Fragment implements View.OnClickListener{
+public class LovePlacesFragment extends Fragment implements View.OnClickListener, LovePlacesContract.View {
 
     private Button buttonFindPlace;
     private RecyclerView recyclerLovePlace;
     private TextView textShow;
+    private FloatingActionButton fab;
 
     private DatabaseReference lovePlacesRef;
 
@@ -46,13 +54,14 @@ public class LovePlacesFragment extends Fragment implements View.OnClickListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        init(view);
+        init();
 
 
         lovePlacesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    lovePlaceList.clear();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         LovePlace lovePlace = dataSnapshot.getValue(LovePlace.class);
                         lovePlaceList.add(lovePlace);
@@ -72,25 +81,28 @@ public class LovePlacesFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void init(View view) {
-        buttonFindPlace = view.findViewById(R.id.button_find_place);
+    private void init() {
+        buttonFindPlace = getView().findViewById(R.id.button_find_place);
         buttonFindPlace.setOnClickListener(this);
 
-        recyclerLovePlace = view.findViewById(R.id.recycler_love_places);
+        recyclerLovePlace = getView().findViewById(R.id.recycler_love_places);
         recyclerLovePlace.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerLovePlace.setHasFixedSize(true);
 
-        textShow = view.findViewById(R.id.text_show);
+        textShow = getView().findViewById(R.id.text_show);
 
         lovePlacesRef = FirebaseDatabase.getInstance().getReference(Config.RF_LOVE_PLACES)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         lovePlaceList = new ArrayList<>();
-        lovePlacesAdapter = new LovePlacesAdapter(lovePlaceList);
+        lovePlacesAdapter = new LovePlacesAdapter(lovePlaceList, this);
         recyclerLovePlace.setAdapter(lovePlacesAdapter);
 
         recyclerLovePlace.setVisibility(View.INVISIBLE);
         textShow.setVisibility(View.VISIBLE);
+
+        fab = getView().findViewById(R.id.fab);
+        fab.setOnClickListener(this);
     }
 
     @Override
@@ -107,6 +119,25 @@ public class LovePlacesFragment extends Fragment implements View.OnClickListener
                 Intent intent = new Intent(getContext(), FindNearbyPlacesActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.fab:
+                Dialog dialogLoading = new Dialog(getContext());
+                dialogLoading.setContentView(R.layout.dialog_loading);
+
+                if (dialogLoading.getWindow() != null) {
+                    dialogLoading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }
+
+                dialogLoading.show();
+                break;
         }
+    }
+
+    @Override
+    public void showLovePlaceDetail() {
+        FragmentManager fragmentManager = getFragmentManager();
+        LovePlaceDetailDialogFragment newFragment = new LovePlaceDetailDialogFragment();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(R.id.fragment_container, newFragment).addToBackStack(null).commit();
     }
 }

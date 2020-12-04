@@ -29,8 +29,4 @@
         <item name="cornerSizeBottomLeft">35dp</item>
     </style>
 
-    <style name="MyRequestDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@android:color/black</item>
-    </style>
-
 </resources>

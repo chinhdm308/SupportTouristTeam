@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements ChipNavigationBar
 
 //        FirebaseDatabase.getInstance().getReference(Config.RF_GROUPS).removeValue();
 //        FirebaseDatabase.getInstance().getReference(Config.RF_CHATS).removeValue();
+//        FirebaseDatabase.getInstance().getReference(Config.RF_LOVE_PLACES).removeValue();
     }
 
     private void checkGPS() {

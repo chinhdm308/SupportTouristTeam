@@ -2,6 +2,8 @@ package dmc.supporttouristteam.Views.Activitis;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -86,6 +88,8 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
     private Polyline mLine;
 
+    private DatabaseReference lovePlacesRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,45 +138,45 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
         buttonDirect = findViewById(R.id.button_direct);
         buttonDirect.setOnClickListener(this);
+
+        lovePlacesRef = FirebaseDatabase.getInstance().getReference(Config.RF_LOVE_PLACES);
     }
 
-    public void showDialog(Place place) {
+    public void showDialogSavePlace(Place place) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         ViewGroup viewGroup = findViewById(android.R.id.content);
         View dialogView = LayoutInflater.from(this)
                 .inflate(R.layout.dialog_save_place, viewGroup, false);
 
         TextInputEditText etPlaceName, etAddress, etDescription;
-        Button buttonCancel, buttonSave;
 
         etPlaceName = dialogView.findViewById(R.id.et_place_name);
         etAddress = dialogView.findViewById(R.id.et_address);
         etDescription = dialogView.findViewById(R.id.et_description);
-        buttonCancel = dialogView.findViewById(R.id.button_cancel);
-        buttonSave = dialogView.findViewById(R.id.button_save);
+
+        if (place != null) {
+            etPlaceName.setText(place.getName());
+            etAddress.setText(place.getVicinity());
+        }
 
         builder.setView(dialogView);
         AlertDialog alertDialog = builder.create();
-
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
+        alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Hủy", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
-
-        buttonSave.setOnClickListener(new View.OnClickListener() {
+        alertDialog.setButton(Dialog.BUTTON_POSITIVE, "Lưu", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 if (!etPlaceName.getText().toString().isEmpty() && !etAddress.getText().toString().isEmpty()) {
-                    DatabaseReference lovePlacesRef = FirebaseDatabase.getInstance().getReference(Config.RF_LOVE_PLACES).child(currentUser.getUid());
-
                     LovePlace lovePlace = new LovePlace(etPlaceName.getText().toString(), etAddress.getText().toString(), etDescription.getText().toString(), "default", place.getLat(), place.getLng());
 
-                    lovePlacesRef.push().setValue(lovePlace, new DatabaseReference.CompletionListener() {
+                    lovePlacesRef.child(currentUser.getUid()).push().setValue(lovePlace, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if (error != null) {
+                            if (error == null) {
                                 Toast.makeText(getApplicationContext(), "Lưu thành công", Toast.LENGTH_SHORT).show();
                                 alertDialog.dismiss();
                             } else {
@@ -185,11 +189,6 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
                 }
             }
         });
-
-        if (place != null) {
-            etPlaceName.setText(place.getName());
-            etAddress.setText(place.getVicinity());
-        }
 
         alertDialog.show();
 
@@ -204,7 +203,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
                 presenter.doSearchPlacesNearYou(myLocation, placeTypeList, spType.getSelectedItemPosition());
                 break;
             case R.id.button_save_place:
-                showDialog(targetPlace);
+                showDialogSavePlace(targetPlace);
                 break;
             case R.id.button_direct:
                 direct();
@@ -337,9 +336,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
                         buttonDirect.setVisibility(View.GONE);
                         LatLng latLng = (LatLng) marker.getTag();
                         textName.setText(currentUser.getDisplayName() + "\nTọa độ: " + latLng.latitude + " " + latLng.longitude);
-//                        textAddress.setText("< trống >");
                         findCurrentPlace();
-                        targetPlace = null;
                     }
                     // change the state of the bottom sheet
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -383,6 +380,10 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
                         textAddress.setText("Gần " + response.body().getResults()[0].getFormatted_address());
 
+                        targetPlace = new Place();
+                        targetPlace.setVicinity(textAddress.getText().toString());
+                        targetPlace.setLat(myLocation.getLatitude());
+                        targetPlace.setLng(myLocation.getLongitude());
                     }
 
                     @Override

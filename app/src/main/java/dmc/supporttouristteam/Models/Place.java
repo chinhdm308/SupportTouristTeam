@@ -11,6 +11,15 @@ public class Place {
     public Place() {
     }
 
+    public Place(double lat, double lng, String icon, String name, String place_id, String vicinity) {
+        this.lat = lat;
+        this.lng = lng;
+        this.icon = icon;
+        this.name = name;
+        this.place_id = place_id;
+        this.vicinity = vicinity;
+    }
+
     public double getLat() {
         return lat;
     }

@@ -10,8 +10,13 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,13 +33,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.SphericalUtil;
+
+import java.text.DecimalFormat;
 
 import dmc.supporttouristteam.Models.GroupInfo;
 import dmc.supporttouristteam.Models.MyLocation;
@@ -50,6 +60,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private GroupInfo groupInfo;
     private boolean roomCheck = false;
 
+    private FirebaseUser currentUser;
+
+    private MyLocation mLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +76,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         groupInfo = (GroupInfo) getIntent().getSerializableExtra(Config.EXTRA_GROUP_INFO);
 
         usersRef = FirebaseDatabase.getInstance().getReference(Config.RF_USERS);
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         registerEventRealtime(groupInfo);
     }
@@ -100,6 +116,63 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(getApplicationContext());
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getApplicationContext());
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setGravity(Gravity.CENTER_HORIZONTAL);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getApplicationContext());
+                snippet.setTextColor(Color.GRAY);
+                snippet.setGravity(Gravity.CENTER_HORIZONTAL);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+    }
+
+    public double CalculationByDistance(LatLng StartP, LatLng EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+//        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+//                + " Meter   " + meterInDec);
+
+        return Radius * c;
     }
 
     @Override
@@ -111,58 +184,17 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 if (groupInfo.getChatList().contains(uid)) {
                     MyLocation location = data.getValue(MyLocation.class);
                     LatLng curUser = new LatLng(location.getLatitude(), location.getLongitude());
-                    if (uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    if (uid.equals(currentUser.getUid())) {
+                        mLocation = location;
                         // Add Marker
-                        Glide.with(getApplicationContext()).asBitmap()
-                                .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        Bitmap icon = createUserBitmap(resource);
-                                        mMap.addMarker(new MarkerOptions()
-                                                .position(curUser)
-                                                .title(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())
-                                                .icon(BitmapDescriptorFactory.fromBitmap(icon))
-                                                .snippet(Common.convertTimeStampToString(location.getTime())));
-                                        if (!roomCheck) {
-                                            roomCheck = !roomCheck;
-                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder()
-                                                    .target(curUser).zoom(16f).build()));
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                    }
-                                });
+                        addMarker(currentUser.getDisplayName(), currentUser.getPhotoUrl().toString(), location, curUser);
                     } else {
-                        // Add Marker
                         usersRef.child(uid).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.exists()) {
                                     User user = snapshot.getValue(User.class);
-                                    Glide.with(getApplicationContext()).asBitmap()
-                                            .load(user.getProfileImg())
-                                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                            .into(new CustomTarget<Bitmap>() {
-                                                @Override
-                                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                                    Bitmap icon = createUserBitmap(resource);
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(curUser)
-                                                            .title(user.getDisplayName())
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(icon))
-                                                            .snippet(Common.convertTimeStampToString(location.getTime())));
-                                                }
-
-                                                @Override
-                                                public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                                }
-                                            });
+                                    addMarker(user.getDisplayName(), user.getProfileImg(), location, curUser);
                                 }
                             }
 
@@ -177,12 +209,39 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    private void addMarker(String title, String url, MyLocation location, LatLng curUser) {
+        double distance = Math.round(SphericalUtil.computeDistanceBetween(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), curUser));
+
+        Glide.with(getApplicationContext()).asBitmap()
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        Bitmap icon = createUserBitmap(resource);
+                        mMap.addMarker(new MarkerOptions()
+                                .position(curUser)
+                                .title(title)
+                                .icon(BitmapDescriptorFactory.fromBitmap(icon))
+                                .snippet(Common.convertTimeStampToString(location.getTime()) + "\nKhoảng cách: " + distance + " mét"));
+                        if (!roomCheck) {
+                            roomCheck = !roomCheck;
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder()
+                                    .target(curUser).zoom(16f).build()));
+                        }
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+    }
+
     @Override
     public void onCancelled(@NonNull DatabaseError error) {
 
     }
-
-
 
     // utility
     private int dp(float value) {

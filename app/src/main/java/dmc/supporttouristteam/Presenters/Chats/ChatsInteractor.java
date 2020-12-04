@@ -18,7 +18,7 @@ import dmc.supporttouristteam.Utils.Config;
 
 public class ChatsInteractor implements ChatsContract.Interactor {
     private ChatsContract.OnOperationListener listener;
-    private List<GroupInfo> groupInfoList;
+    public static List<GroupInfo> groupInfoList;
     private DatabaseReference groupsRef;
 
     public ChatsInteractor(ChatsContract.OnOperationListener listener) {

@@ -37,8 +37,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.R;
@@ -50,7 +48,7 @@ import dmc.supporttouristteam.Views.Activitis.LoginActivity;
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
     private CircleImageView userPhoto;
-    private TextView textEmail, textUsername;
+    private TextView textEmail, textUsername, textPhone;
     private Button buttonLogout;
     private ImageView imageEditAvatar;
 
@@ -58,6 +56,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     public AccountFragment() {
         // Required empty public constructor
+
     }
 
     @Override
@@ -83,6 +82,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         Glide.with(getContext()).load(currentUser.getPhotoUrl()).into(userPhoto);
         textUsername.setText(currentUser.getDisplayName());
         textEmail.setText(currentUser.getEmail());
+
+        textPhone = getView().findViewById(R.id.text_phone);
+        textPhone.setOnClickListener(this);
     }
 
     @Override
@@ -102,12 +104,42 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 checkAndRequestForPermission();
                 break;
             case R.id.text_name:
-                showAlertDialogEditDisplayNameAccount();
+                showAlertDialogChangeDisplayName();
+                break;
+            case R.id.text_phone:
+                showAlertDialogChangePhone();
                 break;
         }
     }
 
-    private void showAlertDialogEditDisplayNameAccount() {
+    private void showAlertDialogChangePhone() {
+        ViewGroup viewGroup = getView().findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_edit_account, viewGroup, false);
+
+        EditText etext = dialogView.findViewById(R.id.etextInfo);
+        TextView text = dialogView.findViewById(R.id.text_request_edit);
+        text.setText("Chỉnh sửa số điện thoại");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setView(dialogView);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Hủy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String getText = etext.getText().toString();
+
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void showAlertDialogChangeDisplayName() {
         ViewGroup viewGroup = getView().findViewById(android.R.id.content);
         View dialogView = LayoutInflater.from(getContext())
                 .inflate(R.layout.dialog_edit_account, viewGroup, false);
@@ -117,7 +149,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         text.setText("Chỉnh sửa tên hiển thị");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setView(dialogView);
+
         AlertDialog alertDialog = builder.create();
+
         alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -194,13 +228,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 Common.requestPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, Config.MY_REQUEST_CODE);
             }
         } else {
-            openGallery();
+            Common.openGallery(getActivity());
         }
-    }
-
-    public void openGallery() {
-        // start picker to get image for cropping and then use the image in cropping activity
-        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(getActivity());
     }
 
     private void updateAvatar(Uri pickedImgUri) {
@@ -218,6 +247,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 Log.d(Config.TAG, "onFailure: did not delete file");
             }
         });
+
+
 
 
         // need to upload user photo to firebase storage and get url

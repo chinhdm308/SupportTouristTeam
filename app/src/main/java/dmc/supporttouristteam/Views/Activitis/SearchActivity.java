@@ -36,7 +36,8 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        getSupportActionBar().hide();
+        getSupportActionBar().setTitle("Tìm kiếm người dùng");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
 
@@ -96,5 +97,12 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
         intent.putExtra(Config.EXTRA_USER, user);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        onBackPressed();
+        finish();
+        return super.onNavigateUp();
     }
 }

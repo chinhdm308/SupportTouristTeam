@@ -16,9 +16,11 @@ import dmc.supporttouristteam.R;
 public class LovePlacesAdapter extends RecyclerView.Adapter<LovePlacesAdapter.LovePlacesHolder> {
 
     private List<LovePlace> list;
+    private LovePlacesContract.View callback;
 
-    public LovePlacesAdapter(List<LovePlace> list) {
+    public LovePlacesAdapter(List<LovePlace> list, LovePlacesContract.View callback) {
         this.list = list;
+        this.callback = callback;
     }
 
     @NonNull
@@ -45,11 +47,20 @@ public class LovePlacesAdapter extends RecyclerView.Adapter<LovePlacesAdapter.Lo
 
     class LovePlacesHolder extends RecyclerView.ViewHolder {
         TextView textPlaceName, textAddress;
+
         public LovePlacesHolder(@NonNull View itemView) {
             super(itemView);
 
             textPlaceName = itemView.findViewById(R.id.text_place_name);
             textAddress = itemView.findViewById(R.id.text_address);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.showLovePlaceDetail();
+                }
+            });
         }
+
     }
 }
