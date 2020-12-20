@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Views.Fragments.LovePlacesFragment">
+    tools:context=".view.fragment.LovePlacesFragment">
 
     <Button
         android:id="@+id/button_find_place"
@@ -46,7 +46,8 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:background="@color/purple_700"
+        android:elevation="5dp"
+        android:backgroundTint="@android:color/white"
         android:contentDescription="Hiển thị tất cả"
         android:src="@drawable/ic_show_all" />
 </RelativeLayout>

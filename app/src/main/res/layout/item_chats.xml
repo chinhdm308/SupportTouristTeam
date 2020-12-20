@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_chats_background"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/bg_item_chats"
     android:elevation="5dp"
-    android:layout_marginBottom="10dp"
-    android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -31,7 +31,8 @@
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/item_chats_photo"
         app:layout_constraintStart_toEndOf="@+id/item_chats_photo"
-        app:layout_constraintTop_toTopOf="@+id/item_chats_photo" />
+        app:layout_constraintTop_toTopOf="@+id/item_chats_photo"
+        app:layout_constraintVertical_bias="0.35000002" />
 
     <Button
         android:id="@+id/item_chats_button_show_location"
@@ -45,4 +46,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearance="@style/CustomShapeAddGroup" />
+
+    <TextView
+        android:id="@+id/item_chats_last_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="abcd xyz"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/item_chats_name"
+        app:layout_constraintTop_toBottomOf="@+id/item_chats_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

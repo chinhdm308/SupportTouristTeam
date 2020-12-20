@@ -29,4 +29,32 @@
         <item name="cornerSizeBottomLeft">35dp</item>
     </style>
 
+    <style name="FullScreenAlert" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="backgroundColor">#ffffff</item>
+        <item name="android:windowBackground">#ffffff</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    // custom bottom sheet style
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+    
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--buttons color-->
+        <item name="buttonStyle">@android:style/Widget.Button.Toggle</item>
+        <!--dialog background-->
+        <item name="android:windowBackground">@drawable/rectangle_round_corner_alert</item>
+    </style>
+
 </resources>

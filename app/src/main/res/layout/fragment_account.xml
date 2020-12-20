@@ -7,54 +7,53 @@
     android:clipToPadding="false"
     android:orientation="vertical"
     android:padding="8dp"
-    tools:context=".Views.Activitis.UserInfoActivity">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:elevation="5dp"
-        app:cardCornerRadius="20dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_user"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageView
-                android:id="@+id/image_edit_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_photo_camera" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    tools:context=".view.activity.UserInfoActivity">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_below="@id/cardview"
-        android:layout_above="@id/button_logout"
         android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
+        android:layout_above="@id/button_logout"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="10dp"
+        android:scrollbars="none"
         android:scrollingCache="true">
 
         <LinearLayout
-            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_user"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@mipmap/ic_launcher" />
+
+                    <ImageView
+                        android:id="@+id/image_edit_avatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/ic_photo_camera" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
 
             <TextView
                 android:layout_width="match_parent"

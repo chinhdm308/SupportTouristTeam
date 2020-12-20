@@ -7,7 +7,7 @@
     android:clipToPadding="false"
     android:padding="8dp"
     android:orientation="vertical"
-    tools:context=".Views.Activitis.UserInfoActivity">
+    tools:context=".view.activity.UserInfoActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"

@@ -8,7 +8,6 @@
         android:id="@+id/text_request_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f2f2f2"
         android:gravity="center"
         android:padding="8dp"
         android:text="Chỉnh sửa"
@@ -17,7 +16,7 @@
 
     <EditText
         android:padding="8dp"
-        android:id="@+id/etextInfo"
+        android:id="@+id/edt_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

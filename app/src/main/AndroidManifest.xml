@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dmc.supporttouristteam">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -19,7 +20,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SupportTouristTeam">
-        <activity android:name=".Views.Activitis.InfoChatActivity"></activity>
+        <service android:name=".service.MyFirebaseIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.MyFCMService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".view.activity.ChatInfoActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,33 +45,33 @@
             android:value="@string/google_maps_key" />
 
         <service
-            android:name=".Service.TrackerService"
+            android:name=".service.TrackerService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".Views.Activitis.TrackingActivity"
+            android:name=".view.activity.TrackingActivity"
             android:label="@string/title_activity_tracking" />
         <activity
-            android:name=".Views.Activitis.FindNearbyPlacesActivity"
+            android:name=".view.activity.FindNearbyPlacesActivity"
             android:label="@string/title_activity_find_nearby_places" />
         <activity
-            android:name=".Views.Activitis.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Views.Activitis.RegisterActivity" />
-        <activity android:name=".Views.Activitis.LoginActivity">
+        <activity android:name=".view.activity.RegisterActivity" />
+        <activity android:name=".view.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Views.Activitis.SearchActivity" />
+        <activity android:name=".view.activity.SearchActivity" />
         <activity
-            android:name=".Views.Activitis.AddGroupActivity"
+            android:name=".view.activity.AddGroupActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Views.Activitis.UserInfoActivity" />
-        <activity android:name=".Views.Activitis.MessageActivity" />
+        <activity android:name=".view.activity.UserInfoActivity" />
+        <activity android:name=".view.activity.MessageActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
