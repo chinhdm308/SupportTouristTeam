@@ -1,5 +1,6 @@
 package dmc.supporttouristteam.presenter.chats;
 
+import java.util.Collections;
 import java.util.List;
 
 import dmc.supporttouristteam.data.model.GroupInfo;
@@ -35,7 +36,9 @@ public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.On
         } else {
             view.hideRecyclerChats();
         }
-        view.setRecyclerChats(groupInfoList);
+        List<GroupInfo> l = groupInfoList;
+        Collections.reverse(l);
+        view.setRecyclerChats(l);
     }
 
     @Override

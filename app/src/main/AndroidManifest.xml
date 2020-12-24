@@ -20,11 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SupportTouristTeam">
-        <service android:name=".service.MyFirebaseIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
+        <!--        <service android:name=".service.MyFirebaseIdService">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />-->
+        <!--            </intent-filter>-->
+        <!--        </service>-->
         <service android:name=".service.MyFCMService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -44,14 +44,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <service
-            android:name=".service.TrackerService"
-            android:enabled="true"
-            android:exported="true" />
+        <service android:name=".service.TrackerService" />
 
         <activity
             android:name=".view.activity.TrackingActivity"
-            android:label="@string/title_activity_tracking" />
+            android:label="@string/title_activity_tracking"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.activity.FindNearbyPlacesActivity"
             android:label="@string/title_activity_find_nearby_places" />
@@ -66,7 +64,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.SearchActivity" />
+        <activity
+            android:name=".view.activity.SearchActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.activity.AddGroupActivity"
             android:windowSoftInputMode="stateHidden" />

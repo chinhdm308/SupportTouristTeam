@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,7 +65,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     private EditText edtMessage;
     private ImageView imageSend;
-    private String TAG = "tag_TrackingActivity";
+    private String TAG = "tagTrackingActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "PotentialBehaviorOverride"})
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -133,8 +134,15 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 snippet.setGravity(Gravity.CENTER_HORIZONTAL);
                 snippet.setText(marker.getSnippet());
 
+                Button buttonDirect = new Button(getApplicationContext());
+                buttonDirect.setText("Chỉ đường");
+                buttonDirect.setTextSize(10);
+                buttonDirect.setBackgroundColor(Color.BLACK);
+                buttonDirect.setTextColor(Color.WHITE);
+
                 info.addView(title);
                 info.addView(snippet);
+                info.addView(buttonDirect);
 
                 return info;
             }
@@ -152,8 +160,13 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                     LatLng curUser = new LatLng(location.getLatitude(), location.getLongitude());
                     if (uid.equals(currentUser.getUid())) {
                         mLocation = location;
+                        if (!roomCheck) {
+                            roomCheck = !roomCheck;
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder()
+                                    .target(curUser).zoom(16f).build()));
+                        }
                         // Add Marker
-                        addMarker(currentUser.getDisplayName(), currentUser.getPhotoUrl().toString(), location, curUser);
+//                        addMarker(currentUser.getDisplayName(), currentUser.getPhotoUrl().toString(), location, curUser);
                     } else {
                         Common.usersRef.child(uid).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -222,7 +235,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                                         if (response.code() == 200) {
                                             if (response.body().success == 1) {
                                                 Toast.makeText(getApplicationContext(),
-                                                        "Gửi tành công",
+                                                        "Gửi thành công",
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -271,11 +284,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                                 .title(title)
                                 .icon(BitmapDescriptorFactory.fromBitmap(icon))
                                 .snippet(Common.convertTimeStampToString(location.getTime()) + "\nKhoảng cách: " + distance + " mét"));
-                        if (!roomCheck) {
-                            roomCheck = !roomCheck;
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder()
-                                    .target(curUser).zoom(16f).build()));
-                        }
                     }
 
                     @Override
