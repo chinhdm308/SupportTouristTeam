@@ -44,11 +44,11 @@ import java.util.Map;
 
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.data.api.ApiUtils;
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.MyLocation;
-import dmc.supporttouristteam.data.model.MyRequest;
-import dmc.supporttouristteam.data.model.MyResponse;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.PublicLocation;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb_mes.MyRequest;
+import dmc.supporttouristteam.data.model.fb_mes.MyResponse;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.util.Common;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,7 +61,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private boolean roomCheck = false;
 
     private FirebaseUser currentUser;
-    private MyLocation mLocation;
+    private PublicLocation mLocation;
 
     private EditText edtMessage;
     private ImageView imageSend;
@@ -156,7 +156,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             if (data.exists()) {
                 String uid = data.getKey();
                 if (groupInfo.getChatList().contains(uid)) {
-                    MyLocation location = data.getValue(MyLocation.class);
+                    PublicLocation location = data.getValue(PublicLocation.class);
                     LatLng curUser = new LatLng(location.getLatitude(), location.getLongitude());
                     if (uid.equals(currentUser.getUid())) {
                         mLocation = location;
@@ -269,7 +269,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         imageSend.setOnClickListener(this);
     }
 
-    private void addMarker(String title, String url, MyLocation location, LatLng curUser) {
+    private void addMarker(String title, String url, PublicLocation location, LatLng curUser) {
         double distance = Math.round(SphericalUtil.computeDistanceBetween(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), curUser));
 
         Glide.with(getApplicationContext()).asBitmap()

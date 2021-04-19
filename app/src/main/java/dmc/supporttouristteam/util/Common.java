@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.JsonObject;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -36,10 +35,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.LovePlace;
-import dmc.supporttouristteam.data.model.Place;
 import dmc.supporttouristteam.R;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.LovePlace;
 
 public class Common {
 
@@ -75,6 +73,8 @@ public class Common {
     public static final String CODE = "CODE";
     public static final String CODE_REQUEST_FRIEND = "REQUEST_FRIEND";
     public static final String CODE_WARNING_MESSAGE = "WARNING_MESSAGE";
+    public static final String CODE_ADD_MEMBER_TO_GROUP = "ADD_MEMBER_TO_GROUP";
+    public static final String ID_GROUP = "ID_GROUP";
 
     public static DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference(RF_USERS);
     public static DatabaseReference groupsRef = FirebaseDatabase.getInstance().getReference(RF_GROUPS);
@@ -94,18 +94,6 @@ public class Common {
     public static void openGallery(Activity activity) {
         // start picker to get image for cropping and then use the image in cropping activity
         CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(activity);
-    }
-
-    public static Place parseJsonPlace(JsonObject object) {
-        JsonObject location = object.getAsJsonObject("geometry").getAsJsonObject("location");
-        Place place = new Place();
-        place.setLat(location.get("lat").getAsDouble());
-        place.setLng(location.get("lng").getAsDouble());
-        place.setIcon(object.get("icon").getAsString());
-        place.setName(object.get("name").getAsString());
-        place.setPlace_id(object.get("place_id").getAsString());
-        place.setVicinity(object.get("vicinity").getAsString());
-        return place;
     }
 
     private static int dp(Context context, float value) {

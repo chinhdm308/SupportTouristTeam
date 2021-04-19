@@ -12,7 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
 import dmc.supporttouristteam.util.Common;
 
 public class ChatsInteractor implements ChatsContract.Interactor {

@@ -1,6 +1,6 @@
-package dmc.supporttouristteam.data.model;
+package dmc.supporttouristteam.data.model.fb;
 
-public class MyLocation {
+public class PublicLocation {
     private int accuracy, altitude, bearing, bearingAccuracyDegrees, speed;
     private int speedAccuracyMetersPerSecond, verticalAccuracyMeters;
     private boolean complete, fromMockProvider;
@@ -17,7 +17,7 @@ public class MyLocation {
         this.id = id;
     }
 
-    public MyLocation() {
+    public PublicLocation() {
 
     }
 

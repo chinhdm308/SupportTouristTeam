@@ -2,27 +2,44 @@
   <dictionary name="chinh">
     <words>
       <w>bệnh</w>
+      <w>chuyện</w>
+      <w>chưa</w>
+      <w>cuộc</w>
       <w>công</w>
+      <w>dùng</w>
+      <w>dụng</w>
       <w>hiện</w>
       <w>hàng</w>
+      <w>khoản</w>
       <w>khách</w>
+      <w>khẩu</w>
+      <w>kiếm</w>
       <w>lịch</w>
+      <w>muốn</w>
+      <w>nghiệm</w>
       <w>ngân</w>
+      <w>người</w>
       <w>nhóm</w>
       <w>nhập</w>
       <w>phải</w>
+      <w>quyền</w>
       <w>thay</w>
       <w>thành</w>
+      <w>thêm</w>
       <w>thông</w>
       <w>thất</w>
       <w>thực</w>
       <w>tiếng</w>
       <w>trong</w>
+      <w>trải</w>
+      <w>trống</w>
       <w>viên</w>
       <w>viêt</w>
       <w>viện</w>
       <w>việt</w>
       <w>điểm</w>
+      <w>đăng</w>
+      <w>được</w>
     </words>
   </dictionary>
 </component>

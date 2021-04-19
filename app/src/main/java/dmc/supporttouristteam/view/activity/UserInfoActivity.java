@@ -30,10 +30,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.data.api.ApiUtils;
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.MyRequest;
-import dmc.supporttouristteam.data.model.MyResponse;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb_mes.MyRequest;
+import dmc.supporttouristteam.data.model.fb_mes.MyResponse;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.util.Common;
 import retrofit2.Call;

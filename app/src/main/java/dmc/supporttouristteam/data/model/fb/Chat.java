@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.data.model;
+package dmc.supporttouristteam.data.model.fb;
 
 public class Chat {
     private String sender;

@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.presenter.add_group.AddGroupContract;
 import dmc.supporttouristteam.R;
 

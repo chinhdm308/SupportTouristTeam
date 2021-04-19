@@ -3,7 +3,7 @@ package dmc.supporttouristteam.presenter.chats;
 import java.util.Collections;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
 
 public class ChatsPresenter implements ChatsContract.Presenter, ChatsContract.OnOperationListener {
     private ChatsContract.View view;

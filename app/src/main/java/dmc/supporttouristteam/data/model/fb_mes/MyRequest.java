@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.data.model;
+package dmc.supporttouristteam.data.model.fb_mes;
 
 import java.util.Map;
 

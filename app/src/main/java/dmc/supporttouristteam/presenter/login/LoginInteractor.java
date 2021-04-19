@@ -22,9 +22,13 @@ public class LoginInteractor implements LoginContract.Interactor {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            listener.onSuccess();
+//                            if (FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                                listener.onSuccess("Đăng nhập thành công");
+//                            } else {
+//                                listener.onFail("Bạn chưa xác thực địa chỉ email");
+//                            }
                         } else {
-                            listener.onFail();
+                            listener.onFail("Đăng nhập thất bại");
                         }
                     }
                 });

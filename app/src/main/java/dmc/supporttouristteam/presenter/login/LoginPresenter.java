@@ -55,15 +55,16 @@ public class LoginPresenter implements LoginContract.Presenter, LoginContract.On
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(String message) {
+        view.showMessage(message);
         view.navigateToHome();
     }
 
     @Override
-    public void onFail() {
+    public void onFail(String message) {
         view.hideProgress();
         view.showLoginButton();
-        view.showMessage("Đăng nhập thất bại");
+        view.showMessage(message);
     }
 
     @Override

@@ -4,8 +4,8 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.User;
 
 public interface AddGroupContract {
     interface View {

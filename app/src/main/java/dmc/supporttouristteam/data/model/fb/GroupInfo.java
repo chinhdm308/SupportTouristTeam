@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.data.model;
+package dmc.supporttouristteam.data.model.fb;
 
 import androidx.annotation.NonNull;
 

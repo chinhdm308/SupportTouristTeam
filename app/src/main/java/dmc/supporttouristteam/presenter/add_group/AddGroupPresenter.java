@@ -5,8 +5,8 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.util.Common;
 
 public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupContract.OnOperationListener {
@@ -41,7 +41,6 @@ public class AddGroupPresenter implements AddGroupContract.Presenter, AddGroupCo
         }
         if (selectedParticipantList.size() == 1) {
             view.showMessage("Thêm thành viên");
-//            interactor.createGroup("", selectedParticipantList, 2);
         }
         if (selectedParticipantList.size() > 1) {
             view.showCreateGroupBottomSheet();

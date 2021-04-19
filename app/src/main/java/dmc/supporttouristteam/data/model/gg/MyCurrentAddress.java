@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.data.model;
+package dmc.supporttouristteam.data.model.gg;
 
 public final class MyCurrentAddress {
     public final Result[] results;

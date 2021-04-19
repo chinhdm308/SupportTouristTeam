@@ -27,8 +27,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmc.supporttouristteam.R;
-import dmc.supporttouristteam.data.model.Chat;
-import dmc.supporttouristteam.data.model.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.Chat;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
 import dmc.supporttouristteam.presenter.message.MessageContract;
 import dmc.supporttouristteam.presenter.message.MessagePresenter;
 import dmc.supporttouristteam.util.Common;
@@ -55,7 +55,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
         init();
 
-        presenter.doLoadDataGroupInfo();
+        presenter.doLoadDataGroupInfo(getIntent());
         presenter.doReadDataMessages();
     }
 
@@ -100,16 +100,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void setNameGroup(String name) {
         textGroupName.setText(name);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (Common.groupClicked != null)
-            presenter.doLoadDataGroupInfo();
-        else
-            finish();
     }
 
     @Override

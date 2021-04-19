@@ -20,8 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.presenter.add_group.AddGroupContract;
 import dmc.supporttouristteam.presenter.add_group.AddGroupPresenter;
 import dmc.supporttouristteam.view.adapter.ParticipantsAdapter;
@@ -91,6 +91,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupContr
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        finish();
         return true;
     }
 

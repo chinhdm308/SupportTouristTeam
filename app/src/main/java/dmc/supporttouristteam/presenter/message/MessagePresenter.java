@@ -1,11 +1,19 @@
 package dmc.supporttouristteam.presenter.message;
 
+import android.content.Intent;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.Chat;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.Chat;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.util.Common;
 
 public class MessagePresenter implements MessageContract.Presenter, MessageContract.OnOperationListener {
@@ -26,7 +34,7 @@ public class MessagePresenter implements MessageContract.Presenter, MessageContr
     }
 
     @Override
-    public void doLoadDataGroupInfo() {
+    public void doLoadDataGroupInfo(Intent intent) {
         String uid;
         if (Common.groupClicked != null) {
             if (Common.groupClicked.getType() == 2) {
@@ -45,6 +53,36 @@ public class MessagePresenter implements MessageContract.Presenter, MessageContr
                 }
                 view.setNameGroup(Common.groupClicked.getName());
             }
+        } else {
+            String key = intent.getStringExtra(Common.ID_GROUP);
+            Common.groupsRef.child(key).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        GroupInfo groupInfo = snapshot.getValue(GroupInfo.class);
+                        if (groupInfo.getType() == 2) {
+                            List<String> chatList = groupInfo.getChatList();
+                            if (!chatList.get(0).equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                interactor.loadDataGroupInfo(chatList.get(0));
+                            } else {
+                                interactor.loadDataGroupInfo(chatList.get(1));
+                            }
+                        } else {
+                            if (groupInfo.getImage().equals("default")) {
+                                view.setImageGroup(null);
+                            } else {
+                                view.setImageGroup(groupInfo.getImage());
+                            }
+                            view.setNameGroup(groupInfo.getName());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 

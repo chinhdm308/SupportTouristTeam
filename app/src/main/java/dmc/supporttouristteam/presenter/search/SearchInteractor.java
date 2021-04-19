@@ -11,7 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 
 public class SearchInteractor implements SearchContract.Interactor {
 

@@ -30,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.LovePlace;
+import dmc.supporttouristteam.data.model.fb.LovePlace;
 import dmc.supporttouristteam.view.adapter.LovePlacesAdapter;
 import dmc.supporttouristteam.presenter.love_places.LovePlacesContract;
 import dmc.supporttouristteam.R;

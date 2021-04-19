@@ -5,7 +5,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.util.Common;
 
 public class SearchPresenter implements SearchContract.Presenter, SearchContract.OnOperationListener {

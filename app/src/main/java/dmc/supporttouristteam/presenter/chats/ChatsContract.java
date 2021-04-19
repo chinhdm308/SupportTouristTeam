@@ -2,7 +2,7 @@ package dmc.supporttouristteam.presenter.chats;
 
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
 
 public interface ChatsContract {
     interface View {

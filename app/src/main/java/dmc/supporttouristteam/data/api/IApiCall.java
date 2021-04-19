@@ -1,11 +1,10 @@
 package dmc.supporttouristteam.data.api;
 
-import com.google.gson.JsonObject;
-
-import dmc.supporttouristteam.data.model.Directions;
-import dmc.supporttouristteam.data.model.MyCurrentAddress;
-import dmc.supporttouristteam.data.model.MyRequest;
-import dmc.supporttouristteam.data.model.MyResponse;
+import dmc.supporttouristteam.data.model.gg.Directions;
+import dmc.supporttouristteam.data.model.gg.MyCurrentAddress;
+import dmc.supporttouristteam.data.model.fb_mes.MyRequest;
+import dmc.supporttouristteam.data.model.fb_mes.MyResponse;
+import dmc.supporttouristteam.data.model.gg.NearPlacesResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -14,13 +13,14 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface IApiCall {
+
     @GET("api/place/nearbysearch/json")
-    Call<JsonObject> loadNearPlaces(@Query("location") String location,
-                                    @Query("radius") int radius,
-                                    @Query("type") String type,
-                                    @Query("sensor") boolean sensor,
-                                    @Query("rankby") String rankby,
-                                    @Query("key") String key);
+    Call<NearPlacesResponse> loadNearPlaces(@Query("location") String location,
+                                            @Query("radius") int radius,
+                                            @Query("type") String type,
+                                            @Query("sensor") boolean sensor,
+                                            @Query("rankby") String rankby,
+                                            @Query("key") String key);
 
 
     @GET("api/directions/json")

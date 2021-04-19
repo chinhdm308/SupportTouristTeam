@@ -21,7 +21,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.util.Common;
 
 public class RegisterInteractor implements RegisterContract.Interactor {
@@ -103,8 +103,16 @@ public class RegisterInteractor implements RegisterContract.Interactor {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            FirebaseAuth.getInstance().signOut();
-                            listener.onSuccess("Đăng ký thành công");
+//                            currentUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if (task.isSuccessful()) {
+                                        FirebaseAuth.getInstance().signOut();
+//                                        listener.onSuccess("Đăng ký thành công. Vào email để xác thực tài khoản");
+                                        listener.onSuccess("Đăng ký thành công");
+//                                    }
+//                                }
+//                            });
                         } else {
                             listener.onFail("Đăng ký thất bại");
                         }

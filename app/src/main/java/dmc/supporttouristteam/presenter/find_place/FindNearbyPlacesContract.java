@@ -1,6 +1,6 @@
 package dmc.supporttouristteam.presenter.find_place;
 
-import dmc.supporttouristteam.data.model.MyLocation;
+import dmc.supporttouristteam.data.model.fb.PublicLocation;
 import dmc.supporttouristteam.data.model.Place;
 
 public interface FindNearbyPlacesContract {
@@ -11,7 +11,7 @@ public interface FindNearbyPlacesContract {
     }
 
     interface Presenter {
-        void doSearchPlacesNearYou(MyLocation myLocation, String[] placeTypeList, int i);
+        void doSearchPlacesNearYou(PublicLocation publicLocation, String[] placeTypeList, int i);
     }
 
     interface OnOperationListener {

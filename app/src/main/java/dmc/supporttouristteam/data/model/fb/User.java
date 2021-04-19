@@ -1,4 +1,4 @@
-package dmc.supporttouristteam.data.model;
+package dmc.supporttouristteam.data.model.fb;
 
 import java.io.Serializable;
 import java.util.HashMap;

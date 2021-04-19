@@ -1,9 +1,11 @@
 package dmc.supporttouristteam.presenter.message;
 
+import android.content.Intent;
+
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.Chat;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.Chat;
+import dmc.supporttouristteam.data.model.fb.User;
 
 public interface MessageContract {
     interface View {
@@ -14,7 +16,7 @@ public interface MessageContract {
 
     interface Presenter {
         void doSendMessage(String message);
-        void doLoadDataGroupInfo();
+        void doLoadDataGroupInfo(Intent intent);
         void doReadDataMessages();
     }
 

@@ -22,7 +22,7 @@ public interface LoginContract {
     }
 
     interface OnOperationListener {
-        void onSuccess();
-        void onFail();
+        void onSuccess(String message);
+        void onFail(String message);
     }
 }

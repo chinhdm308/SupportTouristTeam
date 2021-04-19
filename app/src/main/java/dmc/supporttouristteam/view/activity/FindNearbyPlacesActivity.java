@@ -54,15 +54,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.data.api.ApiUtils;
-import dmc.supporttouristteam.data.model.Directions;
-import dmc.supporttouristteam.data.model.LovePlace;
-import dmc.supporttouristteam.data.model.MyCurrentAddress;
-import dmc.supporttouristteam.data.model.MyLocation;
 import dmc.supporttouristteam.data.model.Place;
+import dmc.supporttouristteam.data.model.fb.LovePlace;
+import dmc.supporttouristteam.data.model.fb.PublicLocation;
+import dmc.supporttouristteam.data.model.gg.Directions;
 import dmc.supporttouristteam.presenter.find_place.FindNearbyPlacesContract;
 import dmc.supporttouristteam.presenter.find_place.FindNearbyPlacesPresenter;
-import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.util.Common;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,6 +69,7 @@ import retrofit2.Response;
 
 public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapReadyCallback, ValueEventListener, FindNearbyPlacesContract.View, View.OnClickListener {
 
+    private static final String TAG = "tagFindNearbyPlacesActivity";
     private GoogleMap mMap;
     private Spinner spType;
     private Button buttonFind, buttonSavePlace, buttonDirect;
@@ -77,7 +77,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
     private FirebaseUser currentUser;
 
-    private MyLocation myLocation;
+    private PublicLocation publicLocation;
 
     private String[] placeTypeList, placeNameList;
     private FindNearbyPlacesPresenter presenter;
@@ -199,7 +199,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
             case R.id.button_find:
                 mMap.clear();
                 showMarkerUser();
-                presenter.doSearchPlacesNearYou(myLocation, placeTypeList, spType.getSelectedItemPosition());
+                presenter.doSearchPlacesNearYou(publicLocation, placeTypeList, spType.getSelectedItemPosition());
                 break;
             case R.id.button_save_place:
                 showDialogSavePlace(targetPlace);
@@ -212,7 +212,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
     private void direct() {
         ApiUtils.start(ApiUtils.BASE_URL_GOOGLE).apiCall()
-                .loadDirect(myLocation.getLatitude() + "," + myLocation.getLongitude(),
+                .loadDirect(publicLocation.getLatitude() + "," + publicLocation.getLongitude(),
                         targetPlace.getLat() + "," + targetPlace.getLng(),
                         getResources().getString(R.string.google_maps_key))
                 .enqueue(new Callback<Directions>() {
@@ -254,8 +254,9 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
     @Override
     public void showPlace(Place place) {
+        Log.d(TAG, place.toString());
         LatLng userMarker = new LatLng(place.getLat(), place.getLng());
-        Glide.with(getApplicationContext()).asBitmap().load(place.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL)
+        Glide.with(getApplicationContext()).asBitmap().load(place.getIcon())
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -277,7 +278,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
 
     @Override
     public void showMarkerUser() {
-        LatLng userMarker = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        LatLng userMarker = new LatLng(publicLocation.getLatitude(), publicLocation.getLongitude());
         if (!roomCheck) {
             roomCheck = !roomCheck;
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder()
@@ -295,7 +296,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
                                 .position(userMarker)
                                 .title(currentUser.getDisplayName())
                                 .icon(BitmapDescriptorFactory.fromBitmap(icon))
-                                .snippet(Common.convertTimeStampToString(myLocation.getTime())));
+                                .snippet(Common.convertTimeStampToString(publicLocation.getTime())));
                         myMarker.setTag(userMarker);
                     }
 
@@ -318,7 +319,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
         Common.publicLocationRef.child(currentUser.getUid()).addValueEventListener(this);
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "PotentialBehaviorOverride"})
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -344,7 +345,7 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
                         List<Address> list = null;
                         try {
                             list = geocoder.getFromLocation(
-                                    myLocation.getLatitude(), myLocation.getLongitude(), 1);
+                                    publicLocation.getLatitude(), publicLocation.getLongitude(), 1);
                             if (list != null && list.size() > 0) {
                                 Address address = list.get(0);
                                 // sending back first address line and locality
@@ -374,38 +375,13 @@ public class FindNearbyPlacesActivity extends FragmentActivity implements OnMapR
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         if (snapshot.getValue() != null) {
-            myLocation = snapshot.getValue(MyLocation.class);
+            publicLocation = snapshot.getValue(PublicLocation.class);
             showMarkerUser();
         }
     }
 
     @Override
     public void onCancelled(@NonNull DatabaseError error) {
-
-    }
-
-    public void findCurrentPlace() {
-
-        ApiUtils.start(ApiUtils.BASE_URL_GOOGLE).apiCall()
-                .loadCurrentAddress(myLocation.getLatitude() + "," + myLocation.getLongitude(), getResources().getString(R.string.google_maps_key))
-                .enqueue(new Callback<MyCurrentAddress>() {
-                    @Override
-                    public void onResponse(Call<MyCurrentAddress> call, Response<MyCurrentAddress> response) {
-                        Log.d(Common.TAG, response.raw().request().url().toString());
-
-                        textAddress.setText("Gần " + response.body().getResults()[0].getFormatted_address());
-
-                        targetPlace = new Place();
-                        targetPlace.setVicinity(textAddress.getText().toString());
-                        targetPlace.setLat(myLocation.getLatitude());
-                        targetPlace.setLng(myLocation.getLongitude());
-                    }
-
-                    @Override
-                    public void onFailure(Call<MyCurrentAddress> call, Throwable t) {
-
-                    }
-                });
 
     }
 }

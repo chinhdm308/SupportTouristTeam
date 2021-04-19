@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.presenter.add_group.AddGroupContract;
 

@@ -62,12 +62,11 @@ public class TrackerService extends Service {
 
         // Create the persistent notification
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_text))
                 //Make this notification ongoing so it can’t be dismissed by the user//
                 .setOngoing(true)
                 .setContentIntent(broadcastIntent)
-                .setSmallIcon(R.drawable.ic_tracker)
+                .setSmallIcon(R.drawable.worldwide_location)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

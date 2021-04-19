@@ -22,8 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.data.model.GroupInfo;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.presenter.chats.ChatsContract;
 import dmc.supporttouristteam.util.Common;

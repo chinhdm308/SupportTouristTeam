@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.view.adapter.SearchAdapter;
 import dmc.supporttouristteam.presenter.search.SearchContract;
 import dmc.supporttouristteam.presenter.search.SearchPresenter;
@@ -44,6 +44,33 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         presenter.doSetRecyclerSearch(userRef);
 
         search();
+    }
+
+    @Override
+    public void setRecyclerSearch(List<User> userList) {
+        this.userList = userList;
+        searchAdapter = new SearchAdapter(userList, presenter);
+        recyclerSearch.setAdapter(searchAdapter);
+    }
+
+    @Override
+    public void setRecyclerSearchAfter(List<User> tmp) {
+        searchAdapter = new SearchAdapter(tmp, presenter);
+        recyclerSearch.setAdapter(searchAdapter);
+    }
+
+    @Override
+    public void navigationToUserInfoActivity(User user) {
+        Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+        intent.putExtra(Common.EXTRA_USER, user);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        finish();
+        return true;
     }
 
     private void search() {
@@ -77,32 +104,5 @@ public class SearchActivity extends AppCompatActivity implements SearchContract.
         presenter = new SearchPresenter(this);
 
         userRef = FirebaseDatabase.getInstance().getReference(Common.RF_USERS);
-    }
-
-    @Override
-    public void setRecyclerSearch(List<User> userList) {
-        this.userList = userList;
-        searchAdapter = new SearchAdapter(userList, presenter);
-        recyclerSearch.setAdapter(searchAdapter);
-    }
-
-    @Override
-    public void setRecyclerSearchAfter(List<User> tmp) {
-        searchAdapter = new SearchAdapter(tmp, presenter);
-        recyclerSearch.setAdapter(searchAdapter);
-    }
-
-    @Override
-    public void navigationToUserInfoActivity(User user) {
-        Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
-        intent.putExtra(Common.EXTRA_USER, user);
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onNavigateUp() {
-        onBackPressed();
-        finish();
-        return super.onNavigateUp();
     }
 }

@@ -11,8 +11,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.Chat;
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.Chat;
+import dmc.supporttouristteam.data.model.fb.User;
 import dmc.supporttouristteam.util.Common;
 
 public class MessageInteractor implements MessageContract.Interactor {

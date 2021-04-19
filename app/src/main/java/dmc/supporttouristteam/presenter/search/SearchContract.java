@@ -4,7 +4,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.User;
+import dmc.supporttouristteam.data.model.fb.User;
 
 public interface SearchContract {
     interface View {

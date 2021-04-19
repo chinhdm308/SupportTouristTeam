@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dmc.supporttouristteam.data.model.GroupInfo;
+import dmc.supporttouristteam.data.model.fb.GroupInfo;
 import dmc.supporttouristteam.view.adapter.ChatsAdapter;
 import dmc.supporttouristteam.presenter.chats.ChatsContract;
 import dmc.supporttouristteam.presenter.chats.ChatsPresenter;

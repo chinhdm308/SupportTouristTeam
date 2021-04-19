@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import dmc.supporttouristteam.data.model.LovePlace;
+import dmc.supporttouristteam.data.model.fb.LovePlace;
 import dmc.supporttouristteam.R;
 import dmc.supporttouristteam.presenter.love_places.LovePlacesContract;
 
